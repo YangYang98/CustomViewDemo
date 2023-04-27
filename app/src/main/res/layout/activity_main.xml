@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
     tools:context=".MainActivity">
 
-    <com.yang.customviewdemo.ui.CircleView
+    <!--<com.yang.customviewdemo.ui.CircleView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="200dp"
@@ -14,6 +16,22 @@
         android:layout_marginBottom="200dp"
         android:background="@color/black"
         app:circle_color="@color/teal_200"
+        />-->
+
+    <SeekBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:max="100"
+        />
+
+    <com.yang.customviewdemo.ui.widget.ArcView
+        android:id="@+id/arcView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
         />
 
 </LinearLayout>
