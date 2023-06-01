@@ -2,21 +2,45 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="50dp"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:orientation="vertical"
         >
 
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/line_chart"
+            android:id="@+id/simple_line_chart"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             />
 
 
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/simple_pie_chart"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            />
+
+        <SeekBar
+            android:id="@+id/seekbar_simple_pie_chart_count"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:max="500"
+            android:progress="5"
+            />
+
+        <SeekBar
+            android:id="@+id/seekbar_simple_pie_chart_range"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:max="500"
+            android:progress="10"
+            />
     </LinearLayout>
 
 </ScrollView>
