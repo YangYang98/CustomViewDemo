@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.example.mpchartdemo.databinding.ActivityMainBinding
 import com.example.mpchartdemo.ui.activity.CandleChartActivity
+import com.example.mpchartdemo.ui.activity.SimpleChartActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +18,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnCandleChart.setOnClickListener {
             startActivity(Intent(this, CandleChartActivity::class.java))
+        }
+
+        binding.btnSimpleChart.setOnClickListener {
+            startActivity(Intent(this, SimpleChartActivity::class.java))
         }
     }
 }

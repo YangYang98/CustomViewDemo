@@ -9,6 +9,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CustomViewDemo">
 
+
+        <activity android:name=".ui.activity.SimpleChartActivity" android:exported="false"/>
         <activity android:name=".ui.activity.CandleChartActivity" android:exported="false"/>
 
         <activity
