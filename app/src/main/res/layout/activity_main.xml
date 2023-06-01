@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="20dp"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:gravity="center"
+    >
 
     <!--<com.yang.customviewdemo.ui.CircleView
         android:layout_width="match_parent"
@@ -18,7 +20,7 @@
         app:circle_color="@color/teal_200"
         />-->
 
-    <SeekBar
+    <!--<SeekBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
@@ -32,6 +34,13 @@
         android:layout_height="wrap_content"
         android:paddingStart="40dp"
         android:paddingEnd="40dp"
+        />-->
+
+    <Button
+        android:id="@+id/btn_fund_chart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="基金走势图"
         />
 
 </LinearLayout>
