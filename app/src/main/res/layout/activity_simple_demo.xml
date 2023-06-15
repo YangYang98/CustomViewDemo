@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    tools:context=".MainActivity"
+    android:gravity="center"
+    >
+
+    <com.yang.customviewdemo.ui.coordinatorLayout.MoveView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@color/black"
+        />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@color/teal_200"
+        app:layout_behavior=".ui.coordinatorLayout.ColorBehavior"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

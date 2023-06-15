@@ -1,11 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
     namespace 'com.yang.customviewdemo'
     compileSdk 33
+
+    dataBinding {
+        enabled = true
+    }
 
     defaultConfig {
         applicationId "com.yang.customviewdemo"

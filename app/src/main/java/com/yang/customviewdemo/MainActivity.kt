@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.yang.customviewdemo.ui.activity.AntFundActivity
+import com.yang.customviewdemo.ui.coordinatorLayout.CustomerBehaviorActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_fund_chart).setOnClickListener {
             startActivity(Intent(this, AntFundActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_coordinator_layout).setOnClickListener {
+            startActivity(Intent(this, CustomerBehaviorActivity::class.java))
         }
     }
 }

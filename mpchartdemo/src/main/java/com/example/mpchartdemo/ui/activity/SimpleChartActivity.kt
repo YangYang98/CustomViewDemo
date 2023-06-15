@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mpchartdemo.R
 import com.example.mpchartdemo.data.SimpleLineChartData
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
@@ -32,6 +33,8 @@ class SimpleChartActivity : AppCompatActivity() {
     private val simplePieChartCountSeekbar: SeekBar by lazy { findViewById(R.id.seekbar_simple_pie_chart_count) }
     private val simplePieChartRangeSeekbar: SeekBar by lazy { findViewById(R.id.seekbar_simple_pie_chart_range) }
 
+    private val simpleBarChart: BarChart by lazy { findViewById(R.id.simple_bar_chart) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,6 +43,11 @@ class SimpleChartActivity : AppCompatActivity() {
 
         initSimpleLineChart()
         initSimplePieChart()
+
+        initSimpleBarChart()
+    }
+
+    private fun initSimpleBarChart() {
 
     }
 

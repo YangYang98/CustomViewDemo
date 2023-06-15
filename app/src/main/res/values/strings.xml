@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AntFundView</string>
+    <string name="app_name">CustomViews</string>
 
     <string name="yield_line">本基金</string>
     <string name="fund_type_yield">同类平均</string>
