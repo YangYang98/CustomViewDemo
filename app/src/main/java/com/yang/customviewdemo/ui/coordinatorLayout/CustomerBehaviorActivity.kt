@@ -24,5 +24,9 @@ class CustomerBehaviorActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_use_behavior).setOnClickListener {
             startActivity(Intent(this, UseBehaviorActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_test).setOnClickListener {
+            startActivity(Intent(this, TestActivity::class.java))
+        }
     }
 }

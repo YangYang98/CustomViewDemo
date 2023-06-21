@@ -11,5 +11,9 @@
         <attr name="arc_textColor" format="color"/>
         <attr name="arc_textSize" format="dimension"/>
     </declare-styleable>
+    
+    <declare-styleable name="FloatLinearLayout">
+        <attr name="layout_pin" format="boolean"/>
+    </declare-styleable>
 
 </resources>

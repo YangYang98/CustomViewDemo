@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:gravity="center_vertical"
+    android:minHeight="60dp"
     android:paddingLeft="20dp"
     android:text="暂无数据"
     android:textColor="@color/black" />

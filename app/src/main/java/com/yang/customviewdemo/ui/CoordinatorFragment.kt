@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yang.customviewdemo.R
 import com.yang.customviewdemo.ui.adapter.TextAdapter
+import com.yang.customviewdemo.ui.widget.StartEndMargin20ItemDecoration
+import com.yang.customviewdemo.utils.ResourceUtil
 
 
 /**
@@ -35,10 +37,17 @@ class CoordinatorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val itemDecoration = StartEndMargin20ItemDecoration(
+            ResourceUtil.getDrawable(context, ResourceUtil.getDrawableResId(context, android.R.attr.listDivider))
+        )
+        itemDecoration.setShowFooterDivider(true)
+
         view.findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter =
-                TextAdapter(requireContext(), (0..1_000).map { "${key}-数据:${it}" }.toList())
+                TextAdapter(requireContext(), (0..1000).map { "${key}-数据:${it}" }.toList())
+            recycledViewPool.setMaxRecycledViews(1, 20)
+            addItemDecoration(itemDecoration)
         }
     }
 }

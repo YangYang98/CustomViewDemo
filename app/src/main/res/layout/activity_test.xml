@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/header_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|snap"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_launcher_background" />
+            </LinearLayout>
+
+            <com.yang.customviewdemo.ui.widget.FloatLinearLayout2
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                >
+
+                <!--<LinearLayout
+                    android:id="@+id/header_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_pin="true"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="这个留着"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/header_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_launcher_background" />
+                </LinearLayout>-->
+
+                <TextView
+                    android:id="@+id/tv_header_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="HEADER1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30dp"
+                    android:background="#434152"
+                    app:layout_pin="true"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="#0188F0"
+                    android:gravity="center"
+                    android:text="滚出去2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="60dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_header_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:gravity="center"
+                    android:text="HEADER2"
+                    android:textColor="#FFFFFF"
+                    android:background="#09F314"
+                    android:textSize="40dp"
+                    app:layout_pin="true"
+                    />
+            </com.yang.customviewdemo.ui.widget.FloatLinearLayout2>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
