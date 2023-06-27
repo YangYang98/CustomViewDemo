@@ -13,4 +13,8 @@
     <color name="index_yield_line_color">#F2A240</color>
     <color name="fund_total_rate_down_text_color">#238E6C</color>
     <color name="fund_total_rate_raise_text_color">#C73E41</color>
+
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
 </resources>
