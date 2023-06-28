@@ -30,4 +30,11 @@
         android:textAllCaps="false"
         android:text="Test" />
 
+    <Button
+        android:id="@+id/btn_test_dispatch_touch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Test Dispatch Touch" />
+
 </LinearLayout>

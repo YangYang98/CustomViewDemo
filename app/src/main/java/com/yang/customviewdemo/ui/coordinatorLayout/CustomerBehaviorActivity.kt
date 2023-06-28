@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.yang.customviewdemo.R
+import com.yang.customviewdemo.ui.activity.test.TestDispatchTouchActivity
 
 
 /**
@@ -27,6 +28,10 @@ class CustomerBehaviorActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_test).setOnClickListener {
             startActivity(Intent(this, TestActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_test_dispatch_touch).setOnClickListener {
+            startActivity(Intent(this, TestDispatchTouchActivity::class.java))
         }
     }
 }

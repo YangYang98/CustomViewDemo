@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.yang.customviewdemo.ui.widget.test.TestNestedScrollParentView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:background="@color/colorPrimary"
+        >
+
+        <com.yang.customviewdemo.ui.widget.test.TestNestedScrollChildView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/index_yield_line_color"
+            />
+    </com.yang.customviewdemo.ui.widget.test.TestNestedScrollParentView>
+
+</FrameLayout>
