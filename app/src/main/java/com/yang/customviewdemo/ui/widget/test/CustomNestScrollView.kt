@@ -4,9 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewConfiguration
 import android.widget.LinearLayout
-import kotlin.math.abs
+import androidx.core.view.NestedScrollingParent3
 
 
 /**
@@ -14,7 +15,7 @@ import kotlin.math.abs
  */
 class CustomNestScrollView@JvmOverloads constructor(
     context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr), NestedScrollingParent3 {
 
     private var mTouchSlop = 0
     private var mLastY = 0f
@@ -26,12 +27,12 @@ class CustomNestScrollView@JvmOverloads constructor(
         mTouchSlop = ViewConfiguration.get(context).scaledPagingTouchSlop / 6
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+    /*override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
 
-        /**
+        *//**
          * 上滑：当头部还没有消失的时候拦截事件
          * 下滑：当头部还没有完全显示的时候拦截事件
-         */
+         *//*
 
         var intercepted = false
         when (ev.action) {
@@ -49,11 +50,11 @@ class CustomNestScrollView@JvmOverloads constructor(
             }
         }
         return intercepted
-    }
+    }*/
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
+        /*when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 mLastY = event.y
             }
@@ -63,7 +64,7 @@ class CustomNestScrollView@JvmOverloads constructor(
                 }
                 mLastY = event.y
             }
-        }
+        }*/
 
         return super.onTouchEvent(event)
     }
@@ -94,5 +95,47 @@ class CustomNestScrollView@JvmOverloads constructor(
 
     private fun hasViewPartShown(dy: Float): Boolean {
         return dy < 0 && scrollY > 0 && !canScrollVertically(-1)
+    }
+
+    override fun onStartNestedScroll(child: View, target: View, axes: Int, type: Int): Boolean {
+        return true
+    }
+
+    override fun onNestedScrollAccepted(child: View, target: View, axes: Int, type: Int) {
+        
+    }
+
+    override fun onStopNestedScroll(target: View, type: Int) {
+        
+    }
+
+    override fun onNestedScroll(
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        type: Int,
+        consumed: IntArray
+    ) {
+        
+    }
+
+    override fun onNestedScroll(
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        type: Int
+    ) {
+        
+    }
+
+    override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {
+        if (hasViewPartShown(dy.toFloat()) || hasViewPartHidden(dy.toFloat())) {
+            consumed[1] = dy
+            scrollBy(0, dy)
+        }
     }
 }
