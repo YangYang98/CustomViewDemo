@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <com.yang.customviewdemo.ui.widget.test.CustomNestScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="60dp"
+            android:paddingBottom="60dp"
+            android:text="HEADER"
+            android:textSize="100dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/grey"
+            android:background="@color/softGreen" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SUSPENDED"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textSize="60dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/softGreen"
+            android:background="@color/grey" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" />
+    </com.yang.customviewdemo.ui.widget.test.CustomNestScrollView>
+</layout>

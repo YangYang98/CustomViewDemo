@@ -16,6 +16,8 @@
 
         <activity android:name=".ui.activity.test.SuspendedLayoutActivity" android:exported="false"/>
 
+        <activity android:name=".ui.activity.test.TestDispatchTouchActivity3" android:exported="false"/>
+
         <activity android:name=".ui.activity.test.TestDispatchTouchActivity2" android:exported="false"/>
 
         <activity android:name=".ui.activity.test.TestJsonRecyclerViewActivity" android:exported="false"/>

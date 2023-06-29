@@ -8,6 +8,7 @@ import com.yang.customviewdemo.R
 import com.yang.customviewdemo.ui.activity.test.SuspendedLayoutActivity
 import com.yang.customviewdemo.ui.activity.test.TestDispatchTouchActivity
 import com.yang.customviewdemo.ui.activity.test.TestDispatchTouchActivity2
+import com.yang.customviewdemo.ui.activity.test.TestDispatchTouchActivity3
 
 
 /**
@@ -38,6 +39,10 @@ class CustomerBehaviorActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_test_dispatch_touch_2).setOnClickListener {
             startActivity(Intent(this, TestDispatchTouchActivity2::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_test_dispatch_touch_3).setOnClickListener {
+            startActivity(Intent(this, TestDispatchTouchActivity3::class.java))
         }
 
         findViewById<Button>(R.id.btn_suspended_layout).setOnClickListener {
