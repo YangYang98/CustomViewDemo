@@ -24,6 +24,20 @@
         android:text="Use Behavior" />
 
     <Button
+        android:id="@+id/btn_custom_behavior"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Custom Behavior" />
+
+    <Button
+        android:id="@+id/btn_custom_behavior_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Custom Behavior 2" />
+
+    <Button
         android:id="@+id/btn_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:background="#888888"
+        android:layout_gravity="top|left"
+        android:text="  Dodo Follow  "
+        app:layout_behavior=".ui.coordinatorLayout.behaviors.DodoViewButtonBehavior2"
+        />
+
+    <com.yang.customviewdemo.ui.widget.DodoMoveView
+        android:id="@+id/dodo_view"
+        android:layout_gravity="top"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="100dp"
+        android:text="Main"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:background="#666666"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dodo Below"
+        app:target="@id/dodo_view"
+        app:layout_behavior=".ui.coordinatorLayout.behaviors.FollowBehavior"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

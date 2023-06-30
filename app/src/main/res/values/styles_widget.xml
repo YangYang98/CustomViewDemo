@@ -16,4 +16,8 @@
         <attr name="layout_pin" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="Follow_Behavior">
+        <attr name="target" format="reference"/>
+    </declare-styleable>
+
 </resources>
