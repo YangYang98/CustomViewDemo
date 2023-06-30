@@ -41,6 +41,10 @@ class CustomerBehaviorActivity : AppCompatActivity() {
             startActivity(Intent(this, TestActivity::class.java))
         }
 
+        findViewById<Button>(R.id.btn_two_stick).setOnClickListener {
+            startActivity(Intent(this, TwoStickActivity::class.java))
+        }
+
         findViewById<Button>(R.id.btn_test_dispatch_touch).setOnClickListener {
             startActivity(Intent(this, TestDispatchTouchActivity::class.java))
         }
