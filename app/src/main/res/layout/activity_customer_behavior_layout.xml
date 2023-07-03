@@ -38,6 +38,13 @@
         android:text="Custom Behavior 2" />
 
     <Button
+        android:id="@+id/btn_custom_behavior_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Custom Behavior 3" />
+
+    <Button
         android:id="@+id/btn_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

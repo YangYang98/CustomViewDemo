@@ -37,6 +37,10 @@ class CustomerBehaviorActivity : AppCompatActivity() {
             startActivity(Intent(this, CustomBehaviorActivity2::class.java))
         }
 
+        findViewById<Button>(R.id.btn_custom_behavior_3).setOnClickListener {
+            startActivity(Intent(this, CustomBehaviorActivity3::class.java))
+        }
+
         findViewById<Button>(R.id.btn_test).setOnClickListener {
             startActivity(Intent(this, TestActivity::class.java))
         }

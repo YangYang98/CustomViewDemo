@@ -16,6 +16,8 @@
 
         <activity android:name=".ui.coordinatorLayout.TwoStickActivity" android:exported="false"/>
 
+        <activity android:name=".ui.coordinatorLayout.CustomBehaviorActivity3" android:exported="false"/>
+
         <activity android:name=".ui.coordinatorLayout.CustomBehaviorActivity2" android:exported="false"/>
 
         <activity android:name=".ui.coordinatorLayout.CustomBehaviorActivity" android:exported="false"/>
