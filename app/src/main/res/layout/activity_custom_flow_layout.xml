@@ -22,7 +22,9 @@
 
         <TextView
             android:text="Java"
-            style="@style/ItemStyle" />
+            style="@style/ItemStyle"
+            android:layout_marginTop="10dp"
+            />
 
         <TextView
             android:text="Custom View"

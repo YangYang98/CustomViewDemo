@@ -46,18 +46,21 @@ class CustomFlowLayout @JvmOverloads constructor(
             val child = getChildAt(i)
 
             if (child.visibility != View.GONE) {
-                val lp = child.layoutParams
+                val lp = child.layoutParams as MarginLayoutParams
                 val childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, paddingStart + paddingEnd, lp.width)
                 val childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, paddingTop + paddingBottom, lp.height)
                 child.measure(childWidthMeasureSpec, childHeightMeasureSpec)
 
                 val childMeasureWidth = child.measuredWidth
                 val childMeasureHeight = child.measuredHeight
-                val itemHorizontalSpacing = if (lineWidth == 0) 0 else itemHorizontalSpacing
 
-                if (lineWidth + itemHorizontalSpacing + childMeasureWidth <= maxWidth) {
-                    lineWidth += itemHorizontalSpacing + childMeasureWidth
-                    lineHeight = max(lineHeight, childMeasureHeight)
+                val realChildWidth = childMeasureWidth + lp.marginStart + lp.marginEnd
+                val realChildHeight = childMeasureHeight + lp.topMargin + lp.bottomMargin
+                val realItemHorizontalSpacing = if (lineWidth == 0) 0 else itemHorizontalSpacing
+
+                if (lineWidth + realItemHorizontalSpacing + realChildWidth <= maxWidth) {
+                    lineWidth += realItemHorizontalSpacing + realChildWidth
+                    lineHeight = max(lineHeight, realChildHeight)
                     lineViews.add(child)
                 } else {
                     maxLineWidth = max(lineWidth, maxLineWidth)
@@ -67,8 +70,8 @@ class CustomFlowLayout @JvmOverloads constructor(
                     allLineItems.add(lineViews)
 
                     //初始化下一行
-                    lineWidth = childMeasureWidth
-                    lineHeight = childMeasureHeight
+                    lineWidth = realChildWidth
+                    lineHeight = realChildHeight
                     lineViews = ArrayList()
                     lineViews.add(child)
                 }
@@ -104,16 +107,21 @@ class CustomFlowLayout @JvmOverloads constructor(
             for (j in 0 until lineView.size) {
 
                 val child = lineView[j]
+                val lp = child.layoutParams as MarginLayoutParams
                 val measuredWidth = child.measuredWidth
                 val measuredHeight = child.measuredHeight
 
-                child.layout(childLeft, childTop, childLeft + measuredWidth, childTop + measuredHeight)
+                child.layout(childLeft + lp.marginStart, childTop + lp.topMargin, childLeft  + lp.marginStart + measuredWidth, childTop + lp.topMargin + measuredHeight)
 
-                childLeft += measuredWidth + itemHorizontalSpacing
+                childLeft += measuredWidth + itemHorizontalSpacing + lp.marginStart
             }
 
             childTop += lineHeight + itemVerticalSpacing
             childLeft = paddingStart
         }
+    }
+
+    override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
+        return MarginLayoutParams(context, attrs)
     }
 }
