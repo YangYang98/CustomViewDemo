@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.yang.customviewdemo.ui.activity.AntFundActivity
+import com.yang.customviewdemo.ui.activity.customer.MainCustomViewActivity
 import com.yang.customviewdemo.ui.activity.test.TestJsonRecyclerViewActivity
 import com.yang.customviewdemo.ui.coordinatorLayout.CustomerBehaviorActivity
 
@@ -39,6 +40,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_test).setOnClickListener {
             startActivity(Intent(this, TestJsonRecyclerViewActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_custom_view).setOnClickListener {
+            startActivity(Intent(this, MainCustomViewActivity::class.java))
         }
     }
 }

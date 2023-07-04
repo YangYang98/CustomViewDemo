@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <com.yang.customviewdemo.ui.widget.CustomFlowLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#44ff0000"
+        >
+
+        <TextView
+            android:text="Android"
+            style="@style/ItemStyle" />
+
+        <TextView
+            android:text="Kotlin"
+            style="@style/ItemStyle" />
+
+        <TextView
+            android:text="Java"
+            style="@style/ItemStyle" />
+
+        <TextView
+            android:text="Custom View"
+            style="@style/ItemStyle" />
+
+    </com.yang.customviewdemo.ui.widget.CustomFlowLayout>
+
+</LinearLayout>
