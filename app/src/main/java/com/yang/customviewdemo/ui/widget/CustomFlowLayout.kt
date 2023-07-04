@@ -33,6 +33,7 @@ class CustomFlowLayout @JvmOverloads constructor(
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
 
+        val maxWidth = widthSize - paddingStart - paddingEnd
         var lineWidth = 0 // 行宽
         var maxLineWidth = 0 // 最大行宽
         var lineHeight = 0 // 行高
@@ -54,7 +55,7 @@ class CustomFlowLayout @JvmOverloads constructor(
                 val childMeasureHeight = child.measuredHeight
                 val itemHorizontalSpacing = if (lineWidth == 0) 0 else itemHorizontalSpacing
 
-                if (lineWidth + itemHorizontalSpacing + childMeasureWidth <= widthSize) {
+                if (lineWidth + itemHorizontalSpacing + childMeasureWidth <= maxWidth) {
                     lineWidth += itemHorizontalSpacing + childMeasureWidth
                     lineHeight = max(lineHeight, childMeasureHeight)
                     lineViews.add(child)
@@ -82,6 +83,9 @@ class CustomFlowLayout @JvmOverloads constructor(
             }
         }
 
+        maxLineWidth += paddingStart + paddingEnd
+        totalHeight += paddingTop + paddingBottom
+
         val measureWidth = if (widthMode == MeasureSpec.EXACTLY) widthSize else maxLineWidth
         val measureHeight = if (heightMode == MeasureSpec.EXACTLY) heightSize else totalHeight
         setMeasuredDimension(measureWidth, measureHeight)
@@ -90,8 +94,8 @@ class CustomFlowLayout @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 
-        var childLeft = 0
-        var childTop = 0
+        var childLeft = paddingStart
+        var childTop = paddingTop
 
         for (i in 0 until allLineItems.size) {
             val lineView = allLineItems[i]
@@ -109,7 +113,7 @@ class CustomFlowLayout @JvmOverloads constructor(
             }
 
             childTop += lineHeight + itemVerticalSpacing
-            childLeft = 0
+            childLeft = paddingStart
         }
     }
 }
