@@ -144,7 +144,11 @@ class CustomFlowLayout @JvmOverloads constructor(
         totalHeight += paddingTop + paddingBottom
 
         val measureWidth = if (widthMode == MeasureSpec.EXACTLY) widthSize else maxLineWidth
-        val measureHeight = if (heightMode == MeasureSpec.EXACTLY) heightSize else totalHeight
+        val measureHeight = when(heightMode) {
+            MeasureSpec.EXACTLY -> heightSize
+            MeasureSpec.AT_MOST -> heightSize.coerceAtMost(totalHeight)
+            else -> totalHeight
+        }
         setMeasuredDimension(measureWidth, measureHeight)
 
     }

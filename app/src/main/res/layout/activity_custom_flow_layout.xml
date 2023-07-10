@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".MainActivity"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             >
 
             <com.yang.customviewdemo.ui.widget.CustomFlowLayout
@@ -98,6 +98,41 @@
             </com.yang.customviewdemo.ui.widget.CustomFlowLayout>
 
         </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            tools:context=".MainActivity"
+            android:layout_marginTop="20dp"
+            >
+
+            <com.yang.customviewdemo.ui.widget.CustomFlowLayout
+                android:id="@+id/flowlayout3"
+                android:background="#44ff0000"
+                android:padding="8dp"
+                app:flowlayout_line_vertical_gravity="top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:text="Android"
+                    style="@style/ItemStyle" />
+
+                <TextView
+                    android:text="Kotlin"
+                    style="@style/ItemStyle" />
+
+                <TextView
+                    android:layout_margin="16dp"
+                    android:text="Java"
+                    style="@style/ItemStyle" />
+
+                <TextView
+                    android:text="Custom View"
+                    style="@style/ItemStyle" />
+            </com.yang.customviewdemo.ui.widget.CustomFlowLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 </layout>
