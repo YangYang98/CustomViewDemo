@@ -36,10 +36,17 @@ class CustomFlowLayout @JvmOverloads constructor(
             requestLayout()
         }
 
+    var maxCount: Int = Int.MAX_VALUE
+        set(value) {
+            field = value
+            requestLayout()
+        }
+
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout)
         lineVerticalGravity = ta.getInt(R.styleable.FlowLayout_flowlayout_line_vertical_gravity, LINE_VERTICAL_GRAVITY_CENTER_VERTICAL)
         maxLines = ta.getInt(R.styleable.FlowLayout_android_maxLines, Int.MAX_VALUE)
+        maxCount = ta.getInt(R.styleable.FlowLayout_maxCount, Int.MAX_VALUE)
         ta.recycle()
     }
 
@@ -68,6 +75,8 @@ class CustomFlowLayout @JvmOverloads constructor(
 
         var lineViews = ArrayList<View>()
 
+        var measuredChildCount = 0 //已经测量的view个数
+
         for (i in 0 until childCount) {
             val child = getChildAt(i)
 
@@ -79,6 +88,8 @@ class CustomFlowLayout @JvmOverloads constructor(
 
                 val childMeasureWidth = child.measuredWidth
                 val childMeasureHeight = child.measuredHeight
+
+                measuredChildCount++
 
                 val realChildWidth = childMeasureWidth + lp.marginStart + lp.marginEnd
                 val realChildHeight = childMeasureHeight + lp.topMargin + lp.bottomMargin
@@ -105,7 +116,7 @@ class CustomFlowLayout @JvmOverloads constructor(
                     lineViews.add(child)
                 }
 
-                if (i == childCount - 1) {
+                if (i == childCount - 1 || (measuredChildCount == maxCount)) {
                     if (lineCount == maxLines) {
                         break
                     }
@@ -114,6 +125,9 @@ class CustomFlowLayout @JvmOverloads constructor(
                     totalHeight += lineHeight + if (lineCount == 1) 0 else itemVerticalSpacing
                     lineHeights.add(lineHeight)
                     allLineItems.add(lineViews)
+                    if (measuredChildCount == maxCount) {
+                        break
+                    }
                 }
             }
         }

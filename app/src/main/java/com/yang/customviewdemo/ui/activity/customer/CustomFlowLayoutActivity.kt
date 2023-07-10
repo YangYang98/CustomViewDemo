@@ -68,6 +68,14 @@ class CustomFlowLayoutActivity : AppCompatActivity() {
                 binding.flowLayout.maxLines = Int.MAX_VALUE
                 true
             }
+            R.id.action_maxCount_3 -> {
+                binding.flowLayout.maxCount = 3
+                true
+            }
+            R.id.action_maxCount_6 -> {
+                binding.flowLayout.maxCount = 6
+                true
+            }
         }
 
         return true

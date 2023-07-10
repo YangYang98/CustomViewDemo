@@ -16,5 +16,9 @@
         android:title="限制最多显示三行"/>
     <item android:id="@+id/action_maxlines_maxCount_no_limit"
         android:title="显示行数无限制"/>
+    <item android:id="@+id/action_maxCount_3"
+        android:title="限制最多显示三个"/>
+    <item android:id="@+id/action_maxCount_6"
+        android:title="限制最多显示六个"/>
 </menu>
 
