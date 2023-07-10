@@ -20,4 +20,12 @@
         <attr name="target" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="FlowLayout">
+        <attr name="flowlayout_line_vertical_gravity" format="enum">
+            <enum name="top" value="0"/>
+            <enum name="center_vertical" value="1"/>
+            <enum name="bottom" value="2" />
+        </attr>
+    </declare-styleable>
+
 </resources>

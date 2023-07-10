@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.yang.customviewdemo.R
 import com.yang.customviewdemo.databinding.ActivityCustomFlowLayoutBinding
+import com.yang.customviewdemo.ui.widget.CustomFlowLayout
 import com.yang.customviewdemo.utils.dp
 
 
@@ -42,6 +43,18 @@ class CustomFlowLayoutActivity : AppCompatActivity() {
             }
             R.id.delete_item -> {
 
+            }
+            R.id.action_line_vertical_gravity_top -> {
+                binding.flowLayout.lineVerticalGravity = CustomFlowLayout.LINE_VERTICAL_GRAVITY_TOP
+                true
+            }
+            R.id.action_line_vertical_gravity_center_vertical -> {
+                binding.flowLayout.lineVerticalGravity = CustomFlowLayout.LINE_VERTICAL_GRAVITY_CENTER_VERTICAL
+                true
+            }
+            R.id.action_line_vertical_gravity_bottom -> {
+                binding.flowLayout.lineVerticalGravity = CustomFlowLayout.LINE_VERTICAL_GRAVITY_BOTTOM
+                true
             }
         }
 

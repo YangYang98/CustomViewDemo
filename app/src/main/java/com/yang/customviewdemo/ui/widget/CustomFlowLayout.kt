@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import com.yang.customviewdemo.R
 import kotlin.math.max
 
 
@@ -23,6 +24,25 @@ class CustomFlowLayout @JvmOverloads constructor(
     private val allLineItems = ArrayList<ArrayList<View>>()
 
     private val lineHeights = ArrayList<Int>()
+
+    var lineVerticalGravity: Int = LINE_VERTICAL_GRAVITY_CENTER_VERTICAL
+        set(value) {
+            field = value
+            requestLayout()
+        }
+
+    init {
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout)
+        lineVerticalGravity = ta.getInt(R.styleable.FlowLayout_flowlayout_line_vertical_gravity, LINE_VERTICAL_GRAVITY_CENTER_VERTICAL)
+        ta.recycle()
+    }
+
+    companion object {
+        private const val TAG = "FlowLayout"
+        const val LINE_VERTICAL_GRAVITY_TOP = 0
+        const val LINE_VERTICAL_GRAVITY_CENTER_VERTICAL = 1
+        const val LINE_VERTICAL_GRAVITY_BOTTOM = 2
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -95,6 +115,20 @@ class CustomFlowLayout @JvmOverloads constructor(
 
     }
 
+    private fun getChildOffsetTop(lineHeight: Int, child: View): Int {
+        val lp = child.layoutParams as MarginLayoutParams
+        val childMeasuredHeight = child.measuredHeight
+        val childMeasuredHeightWithMargin = childMeasuredHeight + lp.topMargin + lp.bottomMargin
+        return when(lineVerticalGravity) {
+            LINE_VERTICAL_GRAVITY_TOP -> 0
+            LINE_VERTICAL_GRAVITY_CENTER_VERTICAL -> (lineHeight - childMeasuredHeightWithMargin) / 2
+            LINE_VERTICAL_GRAVITY_BOTTOM -> lineHeight - childMeasuredHeightWithMargin
+            else -> {
+                throw IllegalArgumentException("unknown lineVerticalGravity value: $lineVerticalGravity")
+            }
+        }
+    }
+
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 
         var childLeft = paddingStart
@@ -111,7 +145,9 @@ class CustomFlowLayout @JvmOverloads constructor(
                 val measuredWidth = child.measuredWidth
                 val measuredHeight = child.measuredHeight
 
-                child.layout(childLeft + lp.marginStart, childTop + lp.topMargin, childLeft  + lp.marginStart + measuredWidth, childTop + lp.topMargin + measuredHeight)
+                val verticalOffset = getChildOffsetTop(lineHeight, child)
+
+                child.layout(childLeft + lp.marginStart, childTop + lp.topMargin + verticalOffset, childLeft  + lp.marginStart + measuredWidth, childTop + lp.topMargin + verticalOffset + measuredHeight)
 
                 childLeft += measuredWidth + itemHorizontalSpacing + lp.marginStart
             }
