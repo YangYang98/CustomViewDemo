@@ -49,10 +49,10 @@ class CustomFlowLayout @JvmOverloads constructor(
     var limitMode = MODE_LIMIT_MAX_LINE
 
     init {
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout)
-        lineVerticalGravity = ta.getInt(R.styleable.FlowLayout_flowlayout_line_vertical_gravity, LINE_VERTICAL_GRAVITY_CENTER_VERTICAL)
-        maxLines = ta.getInt(R.styleable.FlowLayout_android_maxLines, Int.MAX_VALUE)
-        maxCount = ta.getInt(R.styleable.FlowLayout_maxCount, Int.MAX_VALUE)
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.CustomFlowLayout)
+        lineVerticalGravity = ta.getInt(R.styleable.CustomFlowLayout_flowlayout_line_vertical_gravity, LINE_VERTICAL_GRAVITY_CENTER_VERTICAL)
+        maxLines = ta.getInt(R.styleable.CustomFlowLayout_android_maxLines, Int.MAX_VALUE)
+        maxCount = ta.getInt(R.styleable.CustomFlowLayout_maxCount, Int.MAX_VALUE)
         ta.recycle()
     }
 
@@ -229,7 +229,7 @@ class CustomFlowLayout @JvmOverloads constructor(
         return MarginLayoutParams(p)
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
+    override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
         val ss = SavesState(superState)
         ss.maxCount = maxCount

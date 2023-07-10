@@ -20,7 +20,7 @@
         <attr name="target" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="FlowLayout">
+    <declare-styleable name="CustomFlowLayout">
         <attr name="flowlayout_line_vertical_gravity" format="enum">
             <enum name="top" value="0"/>
             <enum name="center_vertical" value="1"/>
