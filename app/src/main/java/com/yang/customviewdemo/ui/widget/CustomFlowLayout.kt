@@ -74,7 +74,7 @@ class CustomFlowLayout @JvmOverloads constructor(
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
 
-        val maxWidth = widthSize - paddingStart - paddingEnd
+        val maxWidth = if (widthMode != MeasureSpec.UNSPECIFIED) widthSize - paddingStart - paddingEnd else Int.MAX_VALUE
         var lineWidth = 0 // 行宽
         var maxLineWidth = 0 // 最大行宽
         var lineHeight = 0 // 行高
