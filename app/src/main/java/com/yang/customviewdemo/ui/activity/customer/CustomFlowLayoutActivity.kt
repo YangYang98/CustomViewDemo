@@ -66,6 +66,7 @@ class CustomFlowLayoutActivity : AppCompatActivity() {
             }
             R.id.action_maxlines_maxCount_no_limit -> {
                 binding.flowLayout.maxLines = Int.MAX_VALUE
+                binding.flowLayout.maxCount = Int.MAX_VALUE
                 true
             }
             R.id.action_maxCount_3 -> {

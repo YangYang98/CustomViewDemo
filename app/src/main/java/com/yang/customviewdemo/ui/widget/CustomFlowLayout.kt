@@ -33,14 +33,18 @@ class CustomFlowLayout @JvmOverloads constructor(
     var maxLines: Int = Int.MAX_VALUE
         set(value) {
             field = value
+            limitMode = MODE_LIMIT_MAX_LINE
             requestLayout()
         }
 
     var maxCount: Int = Int.MAX_VALUE
         set(value) {
             field = value
+            limitMode = MODE_LIMIT_MAX_COUNT
             requestLayout()
         }
+
+    var limitMode = MODE_LIMIT_MAX_LINE
 
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout)
@@ -55,6 +59,10 @@ class CustomFlowLayout @JvmOverloads constructor(
         const val LINE_VERTICAL_GRAVITY_TOP = 0
         const val LINE_VERTICAL_GRAVITY_CENTER_VERTICAL = 1
         const val LINE_VERTICAL_GRAVITY_BOTTOM = 2
+
+        //设置限制行数时，限制个数的设置不要使用；设置限制个数时，限制行数的设置不要使用
+        const val MODE_LIMIT_MAX_LINE = 0
+        const val MODE_LIMIT_MAX_COUNT = 1
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -100,7 +108,7 @@ class CustomFlowLayout @JvmOverloads constructor(
                     lineHeight = max(lineHeight, realChildHeight)
                     lineViews.add(child)
                 } else {
-                    if (lineCount == maxLines) {
+                    if (lineCount == maxLines && limitMode == MODE_LIMIT_MAX_LINE) {
                         break
                     }
                     maxLineWidth = max(lineWidth, maxLineWidth)
@@ -116,8 +124,8 @@ class CustomFlowLayout @JvmOverloads constructor(
                     lineViews.add(child)
                 }
 
-                if (i == childCount - 1 || (measuredChildCount == maxCount)) {
-                    if (lineCount == maxLines) {
+                if (i == childCount - 1 || (measuredChildCount == maxCount && limitMode == MODE_LIMIT_MAX_COUNT)) {
+                    if (lineCount == maxLines && limitMode == MODE_LIMIT_MAX_LINE) {
                         break
                     }
                     maxLineWidth = max(lineWidth, maxLineWidth)
@@ -125,7 +133,7 @@ class CustomFlowLayout @JvmOverloads constructor(
                     totalHeight += lineHeight + if (lineCount == 1) 0 else itemVerticalSpacing
                     lineHeights.add(lineHeight)
                     allLineItems.add(lineViews)
-                    if (measuredChildCount == maxCount) {
+                    if (measuredChildCount == maxCount && limitMode == MODE_LIMIT_MAX_COUNT) {
                         break
                     }
                 }
