@@ -1,6 +1,8 @@
 package com.yang.customviewdemo.ui.widget
 
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -225,5 +227,48 @@ class CustomFlowLayout @JvmOverloads constructor(
     // addViewInner 中调用，但是布局参数类型无法通过 checkLayoutParams() 判断时，会走这个方法。
     override fun generateLayoutParams(p: LayoutParams?): LayoutParams {
         return MarginLayoutParams(p)
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState()
+        val ss = SavesState(superState)
+        ss.maxCount = maxCount
+
+        return ss
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val ss = state as SavesState
+        super.onRestoreInstanceState(ss.superState)
+        maxCount = ss.maxCount
+    }
+
+    class SavesState : BaseSavedState {
+        var maxCount = Int.MAX_VALUE
+        constructor(superState: Parcelable?): super(superState)
+
+        constructor(parcel: Parcel) : super(parcel) {
+            maxCount = parcel.readInt()
+        }
+
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeInt(maxCount)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<SavesState> {
+            override fun createFromParcel(source: Parcel): SavesState {
+                return SavesState(parcel = source)
+            }
+
+            override fun newArray(size: Int): Array<SavesState?> {
+                return arrayOfNulls(size)
+            }
+
+        }
     }
 }
