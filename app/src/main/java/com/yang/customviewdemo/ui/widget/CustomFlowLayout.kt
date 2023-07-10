@@ -160,6 +160,8 @@ class CustomFlowLayout @JvmOverloads constructor(
         var childLeft = paddingStart
         var childTop = paddingTop
 
+        var nextChildIndex = 0
+
         for (i in 0 until allLineItems.size) {
             val lineView = allLineItems[i]
             val lineHeight = lineHeights[i]
@@ -171,6 +173,8 @@ class CustomFlowLayout @JvmOverloads constructor(
                 val measuredWidth = child.measuredWidth
                 val measuredHeight = child.measuredHeight
 
+                nextChildIndex = indexOfChild(child)
+
                 val verticalOffset = getChildOffsetTop(lineHeight, child)
 
                 child.layout(childLeft + lp.marginStart, childTop + lp.topMargin + verticalOffset, childLeft  + lp.marginStart + measuredWidth, childTop + lp.topMargin + verticalOffset + measuredHeight)
@@ -180,6 +184,15 @@ class CustomFlowLayout @JvmOverloads constructor(
 
             childTop += lineHeight + itemVerticalSpacing
             childLeft = paddingStart
+
+            //对在限制个数以外的子元素进行重新布局，布局在(0, 0, 0, 0)的位置。
+            for (k in nextChildIndex + 1 until childCount) {
+                val child = getChildAt(k)
+                if (child.visibility == View.GONE) {
+                    continue
+                }
+                child.layout(0, 0, 0, 0)
+            }
         }
     }
 

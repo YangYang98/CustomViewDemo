@@ -73,7 +73,7 @@ class CustomFlowLayoutActivity : AppCompatActivity() {
                 true
             }
             R.id.action_maxCount_6 -> {
-                binding.flowLayout.maxCount = 6
+                binding.flowLayout.maxCount = 5
                 true
             }
         }
