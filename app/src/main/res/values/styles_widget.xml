@@ -26,6 +26,7 @@
             <enum name="center_vertical" value="1"/>
             <enum name="bottom" value="2" />
         </attr>
+        <attr name="android:maxLines"/>
     </declare-styleable>
 
 </resources>

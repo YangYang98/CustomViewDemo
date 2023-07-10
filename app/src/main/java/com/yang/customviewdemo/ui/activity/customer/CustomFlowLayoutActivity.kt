@@ -56,6 +56,18 @@ class CustomFlowLayoutActivity : AppCompatActivity() {
                 binding.flowLayout.lineVerticalGravity = CustomFlowLayout.LINE_VERTICAL_GRAVITY_BOTTOM
                 true
             }
+            R.id.action_maxlines_1 -> {
+                binding.flowLayout.maxLines = 1
+                true
+            }
+            R.id.action_maxlines_3 -> {
+                binding.flowLayout.maxLines = 3
+                true
+            }
+            R.id.action_maxlines_maxCount_no_limit -> {
+                binding.flowLayout.maxLines = Int.MAX_VALUE
+                true
+            }
         }
 
         return true

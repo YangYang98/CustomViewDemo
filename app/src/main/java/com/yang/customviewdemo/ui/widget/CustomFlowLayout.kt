@@ -30,10 +30,16 @@ class CustomFlowLayout @JvmOverloads constructor(
             field = value
             requestLayout()
         }
+    var maxLines: Int = Int.MAX_VALUE
+        set(value) {
+            field = value
+            requestLayout()
+        }
 
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout)
         lineVerticalGravity = ta.getInt(R.styleable.FlowLayout_flowlayout_line_vertical_gravity, LINE_VERTICAL_GRAVITY_CENTER_VERTICAL)
+        maxLines = ta.getInt(R.styleable.FlowLayout_android_maxLines, Int.MAX_VALUE)
         ta.recycle()
     }
 
@@ -83,6 +89,9 @@ class CustomFlowLayout @JvmOverloads constructor(
                     lineHeight = max(lineHeight, realChildHeight)
                     lineViews.add(child)
                 } else {
+                    if (lineCount == maxLines) {
+                        break
+                    }
                     maxLineWidth = max(lineWidth, maxLineWidth)
                     lineCount++
                     totalHeight += lineHeight + if (lineCount == 1) 0 else itemVerticalSpacing
@@ -97,6 +106,9 @@ class CustomFlowLayout @JvmOverloads constructor(
                 }
 
                 if (i == childCount - 1) {
+                    if (lineCount == maxLines) {
+                        break
+                    }
                     maxLineWidth = max(lineWidth, maxLineWidth)
                     lineCount++
                     totalHeight += lineHeight + if (lineCount == 1) 0 else itemVerticalSpacing
