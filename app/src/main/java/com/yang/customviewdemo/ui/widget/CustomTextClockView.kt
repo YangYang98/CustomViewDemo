@@ -1,5 +1,6 @@
 package com.yang.customviewdemo.ui.widget
 
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
@@ -7,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.LinearInterpolator
 import com.yang.customviewdemo.utils.getBottomedY
 import com.yang.customviewdemo.utils.getCenterY
 import com.yang.customviewdemo.utils.getToppedY
@@ -39,8 +41,18 @@ class CustomTextClockView @JvmOverloads constructor(
     private var mMinuteDeg: Float by Delegates.notNull()
     private var mSecondDeg: Float by Delegates.notNull()
 
+    private var mAnimator: ValueAnimator by Delegates.notNull()
+
     private lateinit var mTimer: Timer
 
+    init {
+        mAnimator = ValueAnimator.ofFloat(6f, 0f)
+        mAnimator.duration = 150
+        mAnimator.interpolator = LinearInterpolator()
+        doInvalidate()
+    }
+
+    //可以在要开始绘制新的一秒的时候，在前150ms线性的旋转6°,达到线性转动的效果
     private fun doInvalidate() {
         Calendar.getInstance().run {
             val hour = get(Calendar.HOUR)
@@ -51,7 +63,26 @@ class CustomTextClockView @JvmOverloads constructor(
             mMinuteDeg = -360 / 60f * (minute - 1)
             mSecondDeg = -360 / 60f * (second - 1)
 
-            invalidate()
+            //记录当前角度，然后让秒圈线性的旋转6°
+            val hd = mHourDeg
+            val md = mMinuteDeg
+            val sd = mSecondDeg
+
+            mAnimator.removeAllUpdateListeners()
+            mAnimator.addUpdateListener {
+                val value = it.animatedValue as Float
+
+                if (minute == 0 && second == 0) {
+                    mHourDeg = hd + value * 5 //时圈旋转角度是分秒的5倍，线性的旋转30°
+                }
+                if (second == 0) {
+                    mMinuteDeg = md + value//线性的旋转6°
+                }
+                mSecondDeg = sd + value
+
+                invalidate()
+            }
+            mAnimator.start()
         }
     }
 
@@ -65,10 +96,6 @@ class CustomTextClockView @JvmOverloads constructor(
         mHourR = mWidth * 0.143f
         mMinuteR = mWidth * 0.35f
         mSecondR = mWidth * 0.35f
-
-        mHourDeg = 0f
-        mMinuteDeg = 0f
-        mSecondDeg = 0f
     }
 
     override fun onDraw(canvas: Canvas?) {
