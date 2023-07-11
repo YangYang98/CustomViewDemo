@@ -45,6 +45,11 @@ class CustomTextClockView @JvmOverloads constructor(
 
     private lateinit var mTimer: Timer
 
+    /**
+     * 绘制方法的回调，供动态壁纸使用
+     */
+    private var mBlock: (() -> Unit)? = null
+
     init {
         mAnimator = ValueAnimator.ofFloat(6f, 0f)
         mAnimator.duration = 150
@@ -53,7 +58,9 @@ class CustomTextClockView @JvmOverloads constructor(
     }
 
     //可以在要开始绘制新的一秒的时候，在前150ms线性的旋转6°,达到线性转动的效果
-    private fun doInvalidate() {
+    fun doInvalidate(block: (() -> Unit)? = null) {
+        this.mBlock = block
+
         Calendar.getInstance().run {
             val hour = get(Calendar.HOUR)
             val minute = get(Calendar.MINUTE)
@@ -80,7 +87,11 @@ class CustomTextClockView @JvmOverloads constructor(
                 }
                 mSecondDeg = sd + value
 
-                invalidate()
+                if (this@CustomTextClockView.mBlock != null) {
+                    this@CustomTextClockView.mBlock?.invoke()
+                } else {
+                    invalidate()
+                }
             }
             mAnimator.start()
         }
@@ -113,8 +124,8 @@ class CustomTextClockView @JvmOverloads constructor(
         drawSecond(canvas, mSecondDeg)
 
 
-        //从原点处向右画一条辅助线，之后要处理文字与x轴的对齐问题，稍后再说
-        canvas.drawLine(0f, 0f, mWidth, 0f, mHelperPaint)
+        //从原点处向右画一条辅助线，之后要处理文字与x轴的对齐问题
+        //canvas.drawLine(0f, 0f, mWidth, 0f, mHelperPaint)
 
         canvas.restore()
     }
@@ -246,4 +257,27 @@ class CustomTextClockView @JvmOverloads constructor(
     fun closeTextClock() {
         mTimer.cancel()
     }
+
+    /**
+     * 停止后续绘制，供动态壁纸使用
+     */
+    fun stopInvalidate() {
+        mAnimator.removeAllUpdateListeners()
+    }
+
+
+    /**
+     * 初始化宽高，供动态壁纸使用
+     */
+    fun initWidthHeight(width: Float, height: Float) {
+        if (this.mWidth < 0) {
+            this.mWidth = width
+            this.mHeight = height
+
+            mHourR = mWidth * 0.143f
+            mMinuteR = mWidth * 0.35f
+            mSecondR = mWidth * 0.35f
+        }
+    }
+
 }

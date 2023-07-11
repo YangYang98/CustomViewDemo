@@ -63,6 +63,17 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <!--动态壁纸服务-->
+        <service android:name=".services.TextClockWallpaperService" android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService"/>
+            </intent-filter>
+
+            <meta-data android:name="android.service.wallpaper"
+                android:resource="@xml/text_clock_wallpaper" />
+        </service>
     </application>
 
 </manifest>
