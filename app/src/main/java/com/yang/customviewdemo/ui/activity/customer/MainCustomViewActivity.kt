@@ -20,5 +20,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_custom_flow_layout).setOnClickListener {
             startActivity(Intent(this, CustomFlowLayoutActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_custom_text_clock).setOnClickListener {
+            startActivity(Intent(this, CustomTextClockActivity::class.java))
+        }
     }
 }
