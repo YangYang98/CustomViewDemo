@@ -141,7 +141,7 @@ class CustomTextClockView @JvmOverloads constructor(
             mPaint.alpha = 225
 
             mPaint.textAlign = Paint.Align.CENTER
-            canvas.drawText("$hour:$minute", 0f, mPaint.getBottomedY(), mPaint)
+            canvas.drawText("$hour:${if (minute < 10) "0$minute" else "$minute"}", 0f, mPaint.getBottomedY(), mPaint)
 
             //绘制月份、星期
             val month = (this.get(Calendar.MONTH) + 1).let {
@@ -200,7 +200,7 @@ class CustomTextClockView @JvmOverloads constructor(
             val iDeg = 360 / 60f * i
             canvas.rotate(iDeg)
 
-            mPaint.alpha = if (iDeg + degrees == 0f) 255 else (0.6f * 255).toInt()
+            mPaint.alpha = if (iDeg + degrees == 0f || iDeg + degrees == 360f) 255 else (0.6f * 255).toInt()
             mPaint.textAlign = Paint.Align.RIGHT
 
             /*if (i < 59) {
@@ -225,7 +225,7 @@ class CustomTextClockView @JvmOverloads constructor(
             val iDeg = 360 / 60f * i
             canvas.rotate(iDeg)
 
-            mPaint.alpha = if (iDeg + degrees == 0f) 255 else (0.6f * 255).toInt()
+            mPaint.alpha = if (iDeg + degrees == 0f || iDeg + degrees == 360f) 255 else (0.6f * 255).toInt()
             mPaint.textAlign = Paint.Align.LEFT
 
             /*if (i < 59) {
