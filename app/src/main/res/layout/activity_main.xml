@@ -67,4 +67,12 @@
         android:textAllCaps="false"
         />
 
+    <Button
+        android:id="@+id/btn_layout_inflate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LayoutInflate"
+        android:textAllCaps="false"
+        />
+
 </LinearLayout>
