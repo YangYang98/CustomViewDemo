@@ -27,6 +27,10 @@ class MainCustomDrawableActivity : AppCompatActivity() {
             btnCircleImage.setOnClickListener {
                 startActivity(Intent(this@MainCustomDrawableActivity, CircleImageDrawableActivity::class.java))
             }
+
+            btnStateDrawable.setOnClickListener {
+                startActivity(Intent(this@MainCustomDrawableActivity, StateDrawableActivity::class.java))
+            }
         }
     }
 }
