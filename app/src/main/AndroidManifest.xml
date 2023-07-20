@@ -14,6 +14,12 @@
         android:theme="@style/Theme.CustomViewDemo"
         tools:targetApi="31">
 
+        <activity android:name=".ui.activity.customer.drawable.CircleImageDrawableActivity" android:exported="false"/>
+
+        <activity android:name=".ui.activity.customer.drawable.RoundImageDrawableActivity" android:exported="false"/>
+
+        <activity android:name=".ui.activity.customer.drawable.MainCustomDrawableActivity" android:exported="false"/>
+
         <activity android:name=".ui.activity.layoutInflate.TestLayoutInflateActivity" android:exported="false"/>
 
         <activity android:name=".ui.activity.customer.CustomTextClockActivity" android:exported="false"/>

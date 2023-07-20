@@ -75,4 +75,12 @@
         android:textAllCaps="false"
         />
 
+    <Button
+        android:id="@+id/btn_custom_drawable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="自定义Drawable"
+        android:textAllCaps="false"
+        />
+
 </LinearLayout>
