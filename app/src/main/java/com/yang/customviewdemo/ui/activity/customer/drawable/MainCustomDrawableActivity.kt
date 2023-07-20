@@ -31,6 +31,10 @@ class MainCustomDrawableActivity : AppCompatActivity() {
             btnStateDrawable.setOnClickListener {
                 startActivity(Intent(this@MainCustomDrawableActivity, StateDrawableActivity::class.java))
             }
+
+            btnImprovePerformance.setOnClickListener {
+                startActivity(Intent(this@MainCustomDrawableActivity, ImprovePerformanceActivity::class.java))
+            }
         }
     }
 }

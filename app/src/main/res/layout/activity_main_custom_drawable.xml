@@ -33,5 +33,12 @@
             android:text="自定义Drawable State"
             android:textAllCaps="false" />
 
+        <Button
+            android:id="@+id/btn_improve_performance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提升UI Performance "
+            android:textAllCaps="false" />
+
     </LinearLayout>
 </layout>
