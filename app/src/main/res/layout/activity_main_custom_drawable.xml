@@ -5,40 +5,53 @@
 
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         >
 
-        <Button
-            android:id="@+id/btn_round_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RoundImageDrawable"
-            android:textAllCaps="false" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
 
-        <Button
-            android:id="@+id/btn_circle_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CircleImageDrawable"
-            android:textAllCaps="false" />
+            <Button
+                android:id="@+id/btn_round_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RoundImageDrawable"
+                android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/btn_state_drawable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="自定义Drawable State"
-            android:textAllCaps="false" />
+            <Button
+                android:id="@+id/btn_circle_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CircleImageDrawable"
+                android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/btn_improve_performance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="提升UI Performance "
-            android:textAllCaps="false" />
+            <Button
+                android:id="@+id/btn_state_drawable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自定义Drawable State"
+                android:textAllCaps="false" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/btn_improve_performance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="提升UI Performance "
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btn_medal_drawable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MedalDrawable"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+    </ScrollView>
 </layout>

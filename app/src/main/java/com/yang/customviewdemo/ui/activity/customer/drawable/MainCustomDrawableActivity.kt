@@ -35,6 +35,8 @@ class MainCustomDrawableActivity : AppCompatActivity() {
             btnImprovePerformance.setOnClickListener {
                 startActivity(Intent(this@MainCustomDrawableActivity, ImprovePerformanceActivity::class.java))
             }
+
+            btnMedalDrawable.background = MedalDrawable(this@MainCustomDrawableActivity, R.drawable.ic_medal, "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈")
         }
     }
 }
