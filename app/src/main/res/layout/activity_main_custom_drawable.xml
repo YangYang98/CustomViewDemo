@@ -52,6 +52,12 @@
                 android:text="MedalDrawable"
                 android:textAllCaps="false" />
 
+            <ImageView
+                android:id="@+id/iv_fish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
         </LinearLayout>
     </ScrollView>
 </layout>
