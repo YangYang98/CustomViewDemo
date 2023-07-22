@@ -1,5 +1,6 @@
 package com.yang.customviewdemo.ui.activity.customer.drawable
 
+import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Paint
@@ -7,6 +8,7 @@ import android.graphics.Path
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.drawable.Drawable
+import android.view.animation.LinearInterpolator
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -19,9 +21,14 @@ class FishDrawable : Drawable() {
     private val mPath: Path by lazy { Path() }
     private val mPaint: Paint by lazy { Paint() }
 
-    private lateinit var middlePoint: PointF
+    //要想不抽搐，要让下面的sin(xx)走完完整的周期-1～1
+    private val valueAnimator: ValueAnimator by lazy { ValueAnimator.ofFloat(0f, 3600f) }
 
-    private var fishMainAngle = 40F
+    private var middlePoint: PointF
+
+    private var fishMainAngle = 90F
+
+    private var currentAnimValue = 0f
 
     companion object {
         private const val OTHER_ALPHA = 110
@@ -62,10 +69,22 @@ class FishDrawable : Drawable() {
         }
 
         middlePoint = PointF(4.19f * HEAD_RADIUS, 4.19f * HEAD_RADIUS)
+
+        valueAnimator.apply {
+            duration = 6000
+            repeatMode = ValueAnimator.RESTART
+            repeatCount = ValueAnimator.INFINITE
+            interpolator = LinearInterpolator()
+            addUpdateListener {
+                currentAnimValue = it.animatedValue as Float
+                invalidateSelf()
+            }
+            start()
+        }
     }
 
     override fun draw(canvas: Canvas) {
-        val fishAngle = fishMainAngle
+        val fishAngle = (fishMainAngle + sin(Math.toRadians(currentAnimValue * 1.2)) * 10).toFloat()
 
         //鱼头
         val headPoint = calculatePoint(middlePoint, BODY_LENGTH / 2, fishAngle)
@@ -120,10 +139,12 @@ class FishDrawable : Drawable() {
     }
 
     private fun makeTail(canvas: Canvas, startPont: PointF, findCenterLength: Float, findEdgeLength: Float, fishAngle: Float) {
-        val centerPoint = calculatePoint(startPont, findCenterLength, fishAngle - 180)
+        val angle = (fishAngle + sin(Math.toRadians(currentAnimValue * 1.5)) * 20).toFloat()
 
-        val leftPoint = calculatePoint(centerPoint, findEdgeLength, fishAngle + 90)
-        val rightPoint = calculatePoint(centerPoint, findEdgeLength, fishAngle - 90)
+        val centerPoint = calculatePoint(startPont, findCenterLength, angle - 180)
+
+        val leftPoint = calculatePoint(centerPoint, findEdgeLength, angle + 90)
+        val rightPoint = calculatePoint(centerPoint, findEdgeLength, angle - 90)
 
         mPath.reset()
         mPath.moveTo(startPont.x, startPont.y)
@@ -138,12 +159,20 @@ class FishDrawable : Drawable() {
         smallRadius: Float, findSmallCircleLength: Float, fishAngle: Float,
         hasBigCircle: Boolean
     ): PointF {
-        val upperCenterPoint = calculatePoint(bottomCenterPoint, findSmallCircleLength, fishAngle - 180)
+        val segmentAngle = if (hasBigCircle) {
+            (fishAngle + cos(Math.toRadians(currentAnimValue * 1.5)) * 15).toFloat()
+        } else {
+            (fishAngle + sin(Math.toRadians(currentAnimValue * 1.5)) * 20).toFloat()
+        }
 
-        val bottomLeftPoint = calculatePoint(bottomCenterPoint, bigRadius, fishAngle + 90)
-        val bottomRightPoint = calculatePoint(bottomCenterPoint, bigRadius, fishAngle - 90)
-        val topLeftPoint = calculatePoint(upperCenterPoint, smallRadius, fishAngle + 90)
-        val topRightPoint = calculatePoint(upperCenterPoint, smallRadius, fishAngle - 90)
+        //val segmentAngle = (fishAngle + sin(Math.toRadians(currentAnimValue * 1.3)) * 20).toFloat()
+
+        val upperCenterPoint = calculatePoint(bottomCenterPoint, findSmallCircleLength, segmentAngle - 180)
+
+        val bottomLeftPoint = calculatePoint(bottomCenterPoint, bigRadius, segmentAngle + 90)
+        val bottomRightPoint = calculatePoint(bottomCenterPoint, bigRadius, segmentAngle - 90)
+        val topLeftPoint = calculatePoint(upperCenterPoint, smallRadius, segmentAngle + 90)
+        val topRightPoint = calculatePoint(upperCenterPoint, smallRadius, segmentAngle - 90)
 
         if (hasBigCircle) {
             canvas.drawCircle(bottomCenterPoint.x, bottomCenterPoint.y, bigRadius, mPaint)
