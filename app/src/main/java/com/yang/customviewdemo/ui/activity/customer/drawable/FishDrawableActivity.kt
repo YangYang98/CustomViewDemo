@@ -16,7 +16,7 @@ class FishDrawableActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val binding: ActivityFishDrawableBinding = DataBindingUtil.setContentView<ActivityFishDrawableBinding?>(this, R.layout.activity_fish_drawable).apply {
-            imgFish.setImageDrawable(FishDrawable())
+
         }
 
 

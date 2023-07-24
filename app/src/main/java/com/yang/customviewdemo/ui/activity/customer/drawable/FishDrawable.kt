@@ -9,6 +9,7 @@ import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.drawable.Drawable
 import android.view.animation.LinearInterpolator
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -24,9 +25,10 @@ class FishDrawable : Drawable() {
     //要想不抽搐，要让下面的sin(xx)走完完整的周期-1～1
     private val valueAnimator: ValueAnimator by lazy { ValueAnimator.ofFloat(0f, 3600f) }
 
-    private var middlePoint: PointF
+    var middlePoint: PointF
+    var headPoint: PointF = PointF(0f, 0f)
 
-    private var fishMainAngle = 90F
+    var fishMainAngle = 90F
 
     private var currentAnimValue = 0f
 
@@ -38,7 +40,7 @@ class FishDrawable : Drawable() {
          * 鱼的长度值
          */
         // 绘制鱼头的半径
-        private const val HEAD_RADIUS = 50f
+        const val HEAD_RADIUS = 50f
         // 鱼身长度
         private const val BODY_LENGTH = HEAD_RADIUS * 3.2f
         // 寻找鱼鳍起始点坐标的线长
@@ -83,11 +85,12 @@ class FishDrawable : Drawable() {
         }
     }
 
+    var frequencySwing = 1f
     override fun draw(canvas: Canvas) {
-        val fishAngle = (fishMainAngle + sin(Math.toRadians(currentAnimValue * 1.2)) * 10).toFloat()
+        val fishAngle = (fishMainAngle + sin(Math.toRadians(currentAnimValue * 1.2 * frequencySwing)) * 10).toFloat()
 
         //鱼头
-        val headPoint = calculatePoint(middlePoint, BODY_LENGTH / 2, fishAngle)
+        headPoint = calculatePoint(middlePoint, BODY_LENGTH / 2, fishAngle)
         canvas.drawCircle(headPoint.x, headPoint.y, HEAD_RADIUS, mPaint)
 
         //右鱼鳍
@@ -105,9 +108,11 @@ class FishDrawable : Drawable() {
         // 画节肢2
         makSegment(canvas, middleCenterPoint, MIDDLE_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS, FIND_SMALL_CIRCLE_LENGTH, fishAngle, false)
 
+        val findEdgeLength = abs(sin(Math.toRadians(currentAnimValue * 1.5 * frequencySwing)) * BIG_CIRCLE_RADIUS).toFloat()
+
         //尾巴
-        makeTail(canvas, middleCenterPoint, FIND_TRIANGLE_LENGTH, BIG_CIRCLE_RADIUS, fishAngle)
-        makeTail(canvas, middleCenterPoint, FIND_TRIANGLE_LENGTH - 10, BIG_CIRCLE_RADIUS - 20, fishAngle)
+        makeTail(canvas, middleCenterPoint, FIND_TRIANGLE_LENGTH, findEdgeLength, fishAngle)
+        makeTail(canvas, middleCenterPoint, FIND_TRIANGLE_LENGTH - 10, findEdgeLength - 20, fishAngle)
 
         //身体
         makeBody(canvas, headPoint, bodyBottomCenterPoint, fishAngle)
@@ -139,7 +144,7 @@ class FishDrawable : Drawable() {
     }
 
     private fun makeTail(canvas: Canvas, startPont: PointF, findCenterLength: Float, findEdgeLength: Float, fishAngle: Float) {
-        val angle = (fishAngle + sin(Math.toRadians(currentAnimValue * 1.5)) * 20).toFloat()
+        val angle = (fishAngle + sin(Math.toRadians(currentAnimValue * 1.5 * frequencySwing)) * 20).toFloat()
 
         val centerPoint = calculatePoint(startPont, findCenterLength, angle - 180)
 
@@ -160,9 +165,9 @@ class FishDrawable : Drawable() {
         hasBigCircle: Boolean
     ): PointF {
         val segmentAngle = if (hasBigCircle) {
-            (fishAngle + cos(Math.toRadians(currentAnimValue * 1.5)) * 15).toFloat()
+            (fishAngle + cos(Math.toRadians(currentAnimValue * 1.5 * frequencySwing)) * 15).toFloat()
         } else {
-            (fishAngle + sin(Math.toRadians(currentAnimValue * 1.5)) * 20).toFloat()
+            (fishAngle + sin(Math.toRadians(currentAnimValue * 1.5 * frequencySwing)) * 20).toFloat()
         }
 
         //val segmentAngle = (fishAngle + sin(Math.toRadians(currentAnimValue * 1.3)) * 20).toFloat()
@@ -214,7 +219,7 @@ class FishDrawable : Drawable() {
         return (8.38f * HEAD_RADIUS).toInt()
     }
 
-    private fun calculatePoint(startPoint: PointF, length: Float, angle: Float): PointF {
+    fun calculatePoint(startPoint: PointF, length: Float, angle: Float): PointF {
         val deltaX: Float = (cos(Math.toRadians(angle.toDouble())) * length).toFloat()
         //angle.toDouble() - 180是因为Android坐标系和数学坐标系不同
         val deltaY: Float = (sin(Math.toRadians((angle - 180).toDouble())) * length).toFloat()
