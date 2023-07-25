@@ -38,7 +38,9 @@ class MainCustomDrawableActivity : AppCompatActivity() {
 
             btnMedalDrawable.background = MedalDrawable(this@MainCustomDrawableActivity, R.drawable.ic_medal, "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈")
 
-            ivFish.setImageDrawable(FishDrawable())
+            btnFishDrawable.setOnClickListener {
+                startActivity(Intent(this@MainCustomDrawableActivity, FishDrawableActivity::class.java))
+            }
         }
     }
 }

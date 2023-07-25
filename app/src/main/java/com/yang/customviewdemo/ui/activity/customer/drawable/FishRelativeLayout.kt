@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PathMeasure
@@ -61,7 +60,6 @@ class FishRelativeLayout @JvmOverloads constructor(
         fishImageView.apply {
             layoutParams = this@FishRelativeLayout.layoutParams
             setImageDrawable(fishDrawable)
-            setBackgroundColor(Color.BLUE)
         }
 
         addView(fishImageView)
