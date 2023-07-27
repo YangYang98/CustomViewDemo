@@ -59,6 +59,13 @@
                 android:text="FishDrawable"
                 android:textAllCaps="false" />
 
+            <Button
+                android:id="@+id/btn_arrow_drawable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ArrowDrawable"
+                android:textAllCaps="false" />
+
         </LinearLayout>
     </ScrollView>
 </layout>

@@ -1,5 +1,6 @@
 package com.yang.customviewdemo.utils
 
+import android.content.Context
 import android.content.res.Resources
 import android.util.TypedValue
 import java.text.DecimalFormat
@@ -49,4 +50,14 @@ fun Number.toStringAsFixed(digits: Int, tailZero: Boolean = true): String {
         }
     }
     return DecimalFormat(stringBuffer.toString()).format(this)
+}
+
+fun getScreenWidth(context: Context): Int {
+    val metrics = context.resources.displayMetrics
+    return metrics.widthPixels
+}
+
+fun getScreenHeight(context: Context): Int {
+    val metrics = context.resources.displayMetrics
+    return metrics.heightPixels
 }

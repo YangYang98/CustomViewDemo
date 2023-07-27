@@ -41,6 +41,10 @@ class MainCustomDrawableActivity : AppCompatActivity() {
             btnFishDrawable.setOnClickListener {
                 startActivity(Intent(this@MainCustomDrawableActivity, FishDrawableActivity::class.java))
             }
+
+            btnArrowDrawable.setOnClickListener {
+                startActivity(Intent(this@MainCustomDrawableActivity, ArrowDrawableActivity::class.java))
+            }
         }
     }
 }
