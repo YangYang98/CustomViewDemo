@@ -8,8 +8,10 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Shader
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import java.text.DecimalFormat
 
 
 /**
@@ -41,6 +43,8 @@ class ExperienceBar @JvmOverloads constructor(
     private var mExperiencePercent = 0F
     //等级圆点的间隔
     private var mPointInterval = 0F
+    private var mPointIntervals: MutableList<Float> = mutableListOf()
+    private var mPointPercent: MutableList<Float> = mutableListOf()
 
     //当前经验值
     private var mExperience = 0
@@ -96,8 +100,22 @@ class ExperienceBar @JvmOverloads constructor(
     private val mAnimatorListener by lazy {
         ValueAnimator.AnimatorUpdateListener {
             mExperiencePercent = it.animatedValue as Float
+            //Log.e("YANGYANG", "it.animatedValue:${it.animatedValue}")
             invalidate()
         }
+    }
+
+    var showMode = ShowMode.MODE_PROPORTION
+        set(value) {
+            field = value
+            setLevelInfo(mExperience, mutableListOf<Int>().apply {
+                addAll(mLevelList)
+            })
+            //invalidate()
+        }
+
+    enum class ShowMode {
+        MODE_BISECTION, MODE_PROPORTION
     }
 
     /**
@@ -135,8 +153,32 @@ class ExperienceBar @JvmOverloads constructor(
      * 计算各个等级点之间的间隔
      */
     private fun computerPointInterval() {
+        if (mLevelList.isNotEmpty()) {
+            val totalValue = mLevelList.lastOrNull() ?: 1
+
+            mPointIntervals.clear()
+            mPointPercent.clear()
+
+            val df = DecimalFormat("0.00")
+            mLevelList.forEachIndexed { index, i ->
+                mPointPercent.add((df.format(i.toFloat() / totalValue)).toFloat())
+            }
+
+            if (mLineWidth > 0) {
+                var totalDistance = 0f
+                mPointPercent.forEachIndexed { index, fl ->
+                    if (index == mPointPercent.size) {
+                        mPointIntervals.add(mLineWidth - totalDistance)
+                    }
+                    val d = mLineWidth * fl
+                    mPointIntervals.add(d)
+                    totalDistance += d
+                }
+            }
+        }
+
         if (mLineWidth > 0 || mLevelList.isNotEmpty()) {
-            mPointInterval = mLineWidth / mLevelList.size
+            mPointInterval = mLineWidth / (mLevelList.size - 1)
         }
     }
 
@@ -181,10 +223,26 @@ class ExperienceBar @JvmOverloads constructor(
 
                 translate(mLineLeft, 0f)
                 val cy = mViewHeight / 2
-                for (level in 1 until mLevelList.size) {
-                    val achieved = mExperiencePercent >= mLevelPercent * level
+                for (level in 1 until mLevelList.size - 1) {
+                    val achieved = mExperiencePercent >= when (showMode) {
+                        ShowMode.MODE_BISECTION -> {
+                            mLevelPercent * level
+                        }
+                        ShowMode.MODE_PROPORTION -> {
+                            mPointPercent[level]
+                        }
+                    }
+                    val cx = when (showMode) {
+                        ShowMode.MODE_PROPORTION -> {
+                            mPointIntervals[level]
+                        }
+                        ShowMode.MODE_BISECTION -> {
+                            mPointInterval * level
+                        }
+                    }
                     drawCircle(
-                        mPointInterval * level, cy,
+                        cx,
+                        cy,
                         if (achieved) mLineHeight else mLineHeight / 2,
                         if (achieved) mLevelAchievedPaint else mLevelNotAchievedPaint
                     )
@@ -196,18 +254,41 @@ class ExperienceBar @JvmOverloads constructor(
     }
 
     private fun computeLevelInfo(): Float {
-        if (mLevelList.isNotEmpty()) {
-            mCurrentLevel = 0
-            for (value in mLevelList) {
-                if (mExperience >= value) mCurrentLevel++
-                else break
+        when (showMode) {
+            ShowMode.MODE_BISECTION -> {
+                if (mLevelList.isNotEmpty()) {
+                    mCurrentLevel = 0
+                    for (value in mLevelList) {
+                        if (mExperience >= value) mCurrentLevel++
+                        else break
+                    }
+                    if (mCurrentLevel < mLevelList.size) {
+                        mLevelPercent = 1f / (mLevelList.size - 1)
+                        val nearestAchieveLevelExperience = if (mCurrentLevel > 0) mLevelList[mCurrentLevel - 1] else 0
+                        //当前经验与最近已完成等级的经验差占这个阶段的百分比
+                        val currentExperiencePercent = (mExperience - nearestAchieveLevelExperience) / (mLevelList[mCurrentLevel] - nearestAchieveLevelExperience).toFloat()
+                        return (mCurrentLevel - 1 + currentExperiencePercent) * mLevelPercent
+                    }
+                }
             }
-            if (mCurrentLevel < mLevelList.size) {
-                mLevelPercent = 1f / mLevelList.size
-                val nearestAchieveLevelExperience = if (mCurrentLevel > 0) mLevelList[mCurrentLevel - 1] else 0
-                //当前经验与最近已完成等级的经验差占这个阶段的百分比
-                val currentExperiencePercent = (mExperience - nearestAchieveLevelExperience) / (mLevelList[mCurrentLevel] - nearestAchieveLevelExperience).toFloat()
-                return (mCurrentLevel + currentExperiencePercent) * mLevelPercent
+            ShowMode.MODE_PROPORTION -> {
+                if (mLevelList.isNotEmpty()) {
+                    mCurrentLevel = 0
+                    for (value in mLevelList) {
+                        if (mExperience >= value) mCurrentLevel++
+                        else break
+                    }
+                    if (mCurrentLevel < mLevelList.size) {
+                        //mLevelPercent = 1f / mLevelList.size
+                        val nearestAchieveLevelExperience = if (mCurrentLevel > 0) mLevelList[mCurrentLevel - 1] else 0
+                        //当前经验与最近已完成等级的经验差占这个阶段的百分比
+                        val currentExperiencePercent = (mExperience - nearestAchieveLevelExperience) / (mLevelList[mCurrentLevel] - nearestAchieveLevelExperience).toFloat()
+
+                        val nearestAchieveLevelPercent: Float = if (mCurrentLevel > 0) mPointPercent[mCurrentLevel - 1] else 0f
+                        val nearestNotAchieveLevelPercent: Float = if (mCurrentLevel >= mPointPercent.size) 1f else if (mCurrentLevel > 0) mPointPercent[mCurrentLevel] else 0f
+                        return nearestAchieveLevelPercent + (nearestNotAchieveLevelPercent - nearestAchieveLevelPercent) * currentExperiencePercent
+                    }
+                }
             }
         }
         return 1f
@@ -219,6 +300,15 @@ class ExperienceBar @JvmOverloads constructor(
             duration = mAnimatorDuration
             interpolator = mInterpolator
             addUpdateListener(mAnimatorListener)
+            start()
+        }
+
+        ValueAnimator.ofFloat(1f, 5f).apply {
+            duration = mAnimatorDuration
+            interpolator = mInterpolator
+            addUpdateListener {
+                Log.e("AAA", "it.animatedValue: ${it.animatedValue}")
+            }
             start()
         }
     }
@@ -234,6 +324,9 @@ class ExperienceBar @JvmOverloads constructor(
     fun setLevelInfo(experience : Int, list : List<Int>) {
         mExperience = experience
         mLevelList.clear()
+        if (list.isNotEmpty() && list[0] != 0) {
+            mLevelList.add(0)
+        }
         mLevelList.addAll(list)
         computerPointInterval()
         startAnimator(0f, computeLevelInfo())

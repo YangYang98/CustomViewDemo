@@ -33,6 +33,13 @@
             android:text="test2"
             android:layout_gravity="center"/>
 
+        <Button
+            android:id="@+id/btn_switch_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="切换模式"
+            android:layout_gravity="center"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

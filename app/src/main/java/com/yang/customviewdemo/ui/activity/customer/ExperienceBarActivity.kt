@@ -28,9 +28,19 @@ class ExperienceBarActivity : AppCompatActivity() {
         }
         val btn_test2 = findViewById<Button>(R.id.btn_test2).apply {
             var index = 0
-            val c = listOf(888, 188)
+            //val c = listOf(888, 188)
+            //val c = listOf(0,10,50)
+            val c = listOf(0,10,50,100,250,500,1000)
             setOnClickListener {
                 experience_bar.updateExperience(c[(index++) % c.size])
+            }
+        }
+
+        findViewById<Button>(R.id.btn_switch_mode).apply {
+            var index = 0
+            val c = listOf(ExperienceBar.ShowMode.MODE_BISECTION, ExperienceBar.ShowMode.MODE_PROPORTION)
+            setOnClickListener {
+                experience_bar.showMode = (c[(index++) % c.size])
             }
         }
 
