@@ -14,6 +14,8 @@
         android:theme="@style/Theme.CustomViewDemo"
         tools:targetApi="31">
 
+        <activity android:name=".ui.activity.customer.CoverLayoutActivity" android:exported="false"/>
+
         <activity android:name=".ui.activity.customer.drawable.ArrowDrawableActivity" android:exported="false"/>
 
         <activity

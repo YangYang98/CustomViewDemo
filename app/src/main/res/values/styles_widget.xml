@@ -29,5 +29,29 @@
         <attr name="android:maxLines"/>
         <attr name="maxCount" format="integer"/>
     </declare-styleable>
+    
+    <declare-styleable name="CoverLayout">
+        <attr name="top_offset" format="dimension"/>
+        <attr name="top_elevation" format="dimension"/>
+        <attr name="trigger_open_offset" format="dimension"/>
+        <attr name="transition_color" format="color"/>
+        <attr name="residual_view" format="reference"/>
+        <attr name="top_view" format="reference"/>
+        <attr name="bottom_view" format="reference"/>
+        <attr name="header_view" format="reference"/>
+        <attr name="top_bar" format="reference"/>
+        <attr name="bottom_bar" format="reference"/>
+    </declare-styleable>
+
+    <!--<declare-styleable name="CoffinLayout">
+        <attr name="lid_offset" format="dimension" />
+        <attr name="lid_elevation" format="dimension" />
+        <attr name="trigger_open_offset" format="dimension" />
+        <attr name="residual_view" format="reference" />
+        <attr name="header_view" format="reference" />
+        <attr name="transition_color" format="color" />
+        <attr name="top_bar" format="reference"/>
+        <attr name="bottom_bar" format="reference"/>
+    </declare-styleable>-->
 
 </resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yang.customviewdemo.ui.widget.CoverLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cover_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    app:bottom_bar="@layout/layout_cover_layout_bottom_bar"
+    app:header_view="@layout/layout_cover_layout_header_view"
+    app:top_elevation="8dp"
+    app:top_offset="240dp"
+    app:residual_view="@layout/layout_cover_layout_residual_view"
+    app:top_bar="@layout/layout_cover_layout_top_bar"
+    app:transition_color="@color/softYellow"
+    app:trigger_open_offset="100dp"
+    android:background="@color/colorAccent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher_background"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bottom_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/top_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/horizontal_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="@color/white"
+            />
+
+    </LinearLayout>
+
+</com.yang.customviewdemo.ui.widget.CoverLayout>
