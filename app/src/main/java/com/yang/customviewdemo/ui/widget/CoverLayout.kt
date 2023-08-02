@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.VelocityTracker
@@ -50,6 +51,10 @@ class CoverLayout @JvmOverloads constructor(
     private var mTopOffset = 0
     private var mTopViewOffset = 0
     private var mBottomViewOffset = 0
+    fun setBVO(value: Int, from: String) {
+        Log.e("YANGYANG", "value:${value}, from:$from")
+        mBottomViewOffset = value
+    }
     private var mTopElevation = 0
     private var mTriggerOffset = mTopOffset / 2
 
@@ -481,7 +486,8 @@ class CoverLayout @JvmOverloads constructor(
                         } else if (it.top + offset > top) {
                             offset = top - it.top
                         }
-                        mBottomViewOffset += offset
+                        setBVO(mBottomViewOffset + offset, "computeScroll:打开了盖子，滑动BottomView  --->mBottomViewOffset:$mBottomViewOffset, offset:$offset")
+                        //mBottomViewOffset += offset
                         it.offsetTopAndBottom(offset)
                         mTransitionView.offsetTopAndBottom(-offset)
                     }
@@ -501,8 +507,9 @@ class CoverLayout @JvmOverloads constructor(
                 mCurrentStatus = STATE_NAKED
                 notifyListener()
             } else if (mCurrentStatus == STATE_CLOSING) {
-                val offset = top - (mBottomView?.bottom ?: 0)
-                mBottomViewOffset += offset
+                val offset = top - (mBottomView?.top ?: 0)
+                setBVO(mBottomViewOffset + offset, "computeScroll:滚动结束, 更新状态    --->mBottomViewOffset:$mBottomViewOffset, offset:$offset")
+                //mBottomViewOffset += offset
                 mBottomView?.offsetTopAndBottom(offset)
                 mTransitionView.offsetTopAndBottom(-offset)
                 mResidualView?.translationY = 0f
@@ -529,7 +536,8 @@ class CoverLayout @JvmOverloads constructor(
                     if (bottomView.top > top || bottomView.top + bottomViewOffset > top) {
                         bottomViewOffset = top - bottomView.top
                     }
-                    mBottomViewOffset += bottomViewOffset
+                    setBVO(mBottomViewOffset + bottomViewOffset, "offsetChildView    --->mBottomViewOffset:$mBottomViewOffset, bottomViewOffset:$bottomViewOffset")
+                    //mBottomViewOffset += bottomViewOffset
                     bottomView.offsetTopAndBottom(bottomViewOffset)
                     mHeaderViewOffset += bottomViewOffset
                     mHeaderView?.offsetTopAndBottom(bottomViewOffset)
@@ -676,7 +684,8 @@ class CoverLayout @JvmOverloads constructor(
                     offset = top - it.top
                 }
 
-                mBottomViewOffset += offset
+                setBVO(mBottomViewOffset + offset, "offsetBottomView    --->mBottomViewOffset:$mBottomViewOffset, offset:$offset")
+                //mBottomViewOffset += offset
                 it.offsetTopAndBottom(offset)
                 mTransitionView.offsetTopAndBottom(-offset)
             }
