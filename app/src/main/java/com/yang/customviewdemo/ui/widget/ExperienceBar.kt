@@ -8,9 +8,9 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Shader
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import com.yang.customviewdemo.utils.FixFloatEvaluator
 import java.text.DecimalFormat
 
 
@@ -299,16 +299,8 @@ class ExperienceBar @JvmOverloads constructor(
         mAnimator = ValueAnimator.ofFloat(start, end).apply {
             duration = mAnimatorDuration
             interpolator = mInterpolator
+            setEvaluator(FixFloatEvaluator())
             addUpdateListener(mAnimatorListener)
-            start()
-        }
-
-        ValueAnimator.ofFloat(1f, 5f).apply {
-            duration = mAnimatorDuration
-            interpolator = mInterpolator
-            addUpdateListener {
-                Log.e("AAA", "it.animatedValue: ${it.animatedValue}")
-            }
             start()
         }
     }
