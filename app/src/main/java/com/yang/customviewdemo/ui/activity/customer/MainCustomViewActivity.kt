@@ -32,5 +32,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_experience_bar).setOnClickListener {
             startActivity(Intent(this, ExperienceBarActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_ruler_view).setOnClickListener {
+            startActivity(Intent(this, RulerViewActivity::class.java))
+        }
     }
 }

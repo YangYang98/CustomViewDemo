@@ -26,4 +26,15 @@
     <color name="softYellow">#fdedbc</color>
     <color name="light_yellow">#fdedbc</color>
     <color name="softBlue">#FFB1F1F5</color>
+
+    <color name="black2">#666</color>
+    <color name="black3">#ff1D2129</color>
+
+    <color name="lineColor2">#a6a5a5</color>
+    <color name="white2">#F6FAFB</color>
+    <color name="white3">#fff8f6f7</color>
+    <color name="white4">#F5F6F7</color>
+    <color name="white5">#261D2129</color>
+    <color name="white6">#801D2129</color>
+    <color name="transparent">#00000000</color>
 </resources>
