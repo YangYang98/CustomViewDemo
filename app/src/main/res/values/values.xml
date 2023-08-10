@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--出场 -->
+    <attr name="parallaxTransformOutX" format="float"/>
+    <attr name="parallaxTransformOutY" format="float"/>
+
+    <!--入场 -->
+    <attr name="parallaxTransformInX" format="float"/>
+    <attr name="parallaxTransformInY" format="float"/>
+
+    <!--旋转圈数-->
+    <attr name="parallaxRotate" format="float"/>
+    <!--缩放倍数-->
+    <attr name="parallaxZoom" format="float"/>
+</resources>

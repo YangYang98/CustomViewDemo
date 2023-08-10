@@ -36,5 +36,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_ruler_view).setOnClickListener {
             startActivity(Intent(this, RulerViewActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_parallax_animator).setOnClickListener {
+            startActivity(Intent(this, ParallaxAnimatorActivity::class.java))
+        }
     }
 }
