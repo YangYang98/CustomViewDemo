@@ -1,6 +1,12 @@
 package com.yang.customviewdemo.ui.activity.viewpager
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,12 +14,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toBitmap
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.PageTransformer
 import com.yang.customviewdemo.R
 import com.yang.customviewdemo.databinding.ActivityPaletteBinding
+import com.yang.customviewdemo.utils.ColorUtils
+import java.util.Random
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.math.abs
@@ -62,6 +71,9 @@ class PaletteActivity : AppCompatActivity() {
         }
     }
 
+    private val mRandom: Random by lazy { Random() }
+    var mHotColor = Color.TRANSPARENT
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -105,6 +117,8 @@ class PaletteActivity : AppCompatActivity() {
 
             setPageTransformer(true, StackPageTransformer(this))
         }
+
+        initBitMap(mBinding.ivId.drawable.toBitmap())
     }
 
     override fun onResume() {
@@ -240,5 +254,74 @@ class PaletteActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun onAnimatorClick(view: View?) {
+        val colorAnim = ObjectAnimator.ofInt(mBinding.titleTv7, "backgroundColor", Color.RED, Color.BLUE, Color.YELLOW).apply {
+            duration = 3000
+            setEvaluator(ArgbEvaluator())
+            start()
+        }
+    }
+
+    fun onRandomClick(view: View?) {
+        val drawable = mDrawables[mRandom.nextInt(mDrawables.size)]
+        val bitmap = BitmapFactory.decodeResource(resources, drawable)
+        if (bitmap != null) {
+            mBinding.ivId.setImageBitmap(bitmap)
+            initBitMap(bitmap)
+        }
+    }
+
+    private fun initBitMap(bitmap: Bitmap) {
+        ColorUtils.initPalette(bitmap) { palette, hotColor, darkMutedColor, lightMutedColor,
+                                         darkVibrantColor, lightVibrantColor,
+                                         mutedColor, vibrantColor ->
+
+            Toast.makeText(this, "处理完了", Toast.LENGTH_SHORT).show()
+            runOnUiThread {
+                mBinding.apply {
+                    titleTv.apply {
+                        text = "hotColor"
+                        setTextColor(palette.dominantSwatch?.bodyTextColor ?: Color.WHITE)
+                        setBackgroundColor(hotColor)
+                    }
+                    titleTv1.apply {
+                        text = "darkMutedColor"
+                        setTextColor(palette.darkMutedSwatch?.bodyTextColor ?: Color.WHITE)
+                        setBackgroundColor(darkMutedColor)
+                    }
+                    titleTv2.apply {
+                        text = "lightMutedColor"
+                        setTextColor(palette.lightMutedSwatch?.bodyTextColor ?: Color.WHITE)
+                        setBackgroundColor(lightMutedColor)
+                    }
+                    titleTv3.apply {
+                        text = "darkVibrantColor"
+                        setTextColor(palette.darkVibrantSwatch?.bodyTextColor ?: Color.WHITE)
+                        setBackgroundColor(darkVibrantColor)
+                    }
+                    titleTv4.apply {
+                        text = "lightVibrantColor"
+                        setTextColor(palette.lightVibrantSwatch?.bodyTextColor ?: Color.WHITE)
+                        setBackgroundColor(lightVibrantColor)
+                    }
+                    titleTv5.apply {
+                        text = "mutedColor"
+                        setTextColor(palette.mutedSwatch?.bodyTextColor ?: Color.WHITE)
+                        setBackgroundColor(mutedColor)
+                    }
+                    titleTv6.apply {
+                        text = "vibrantColor"
+                        setTextColor(palette.vibrantSwatch?.bodyTextColor ?: Color.WHITE)
+                        setBackgroundColor(vibrantColor)
+                    }
+
+                    val color = intArrayOf(mutedColor, lightVibrantColor, vibrantColor)
+                    ColorUtils.setGradualChange(titleTv7, color, GradientDrawable.Orientation.TL_BR, 55)
+
+                }
+            }
+        }
     }
 }
