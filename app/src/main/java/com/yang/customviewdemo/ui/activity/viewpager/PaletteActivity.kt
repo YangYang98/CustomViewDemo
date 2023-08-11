@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.PageTransformer
 import com.yang.customviewdemo.R
@@ -16,16 +17,33 @@ import com.yang.customviewdemo.databinding.ActivityPaletteBinding
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.math.abs
+import kotlin.math.min
 
 
 /**
+ * 当不滑动状态下:
+ *      position = -1 左侧View
+ *      position = 0 当前View
+ *      position = 1 右侧View
+ *
+ * 当滑动状态下:
+ *  向左滑动: [ position < 0 && position > -1]
+ *    左侧View      position < -1
+ *    当前View    0 ~ -1
+ *    右侧View   1 ~ 0
+ *
+ *  向右滑动:[position > 0 && position < 1 ]
+ *   左侧View  -1 < position < 0
+ *   当前View  0 ~ 1
+ *   右侧View  position > 1
+ *
  * Create by Yang Yang on 2023/8/10
  */
 class PaletteActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityPaletteBinding
 
-    private val mDrawables = intArrayOf(R.drawable.ic_woniu, R.drawable.ic_tiger_run_eat, R.drawable.ic_road, R.mipmap.introductory_page_0)
+    private val mDrawables = intArrayOf(R.drawable.ic_woniu, R.drawable.ic_road, R.drawable.ic_launcher_background)
 
     //按压时不自己滚动
     var isDown: Boolean = false
@@ -34,9 +52,11 @@ class PaletteActivity : AppCompatActivity() {
     val timerTask: TimerTask by lazy {
         object : TimerTask() {
             override fun run() {
-                val page = mBinding.viewPager.currentItem + 1
-                runOnUiThread {
-                    mBinding.viewPager.currentItem = page
+                if (!isDown) {
+                    val page = mBinding.viewPager.currentItem + 1
+                    runOnUiThread {
+                        mBinding.viewPager.currentItem = page
+                    }
                 }
             }
         }
@@ -75,6 +95,15 @@ class PaletteActivity : AppCompatActivity() {
                 }
 
             })
+        }
+
+        mBinding.viewStackPage.apply {
+            adapter = BannerAdapter(context, mDrawables)
+            pageMargin = 20
+            offscreenPageLimit = 3
+            currentItem = 1
+
+            setPageTransformer(true, StackPageTransformer(this))
         }
     }
 
@@ -119,6 +148,9 @@ class PaletteActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 画廊效果
+     */
     class ScaleTransformer: PageTransformer {
 
         companion object {
@@ -140,6 +172,71 @@ class PaletteActivity : AppCompatActivity() {
                     scaleX = MAX_SCALE
                     scaleY = MAX_SCALE
                 }
+            }
+        }
+
+    }
+
+    /**
+     * 翻书效果
+     */
+    class StackPageTransformer(private val viewPager: ViewPager): PageTransformer {
+
+        companion object {
+            //View 之间的偏移量
+            private const val DEVIATION = 60f
+
+            private const val ROTATION = 60f
+
+            private const val SCALE_VALUE = 1f
+
+        }
+
+        var isStack = false
+
+        override fun transformPage(page: View, position: Float) {
+
+            val pageWidth = viewPager.width
+
+            //隐藏左侧侧的view
+            page.visibility = if (position <= -1f) View.GONE else View.VISIBLE
+
+            //当前View和右侧的View [让右侧View和当前View叠加起来]
+            if (position >= 0f) {
+
+                val translationX: Float = if (isStack) {
+                    DEVIATION - pageWidth * position
+                } else {
+                    (DEVIATION - pageWidth) * position
+                }
+                page.translationX = translationX
+            }
+
+            if (position == 0f) {
+                page.apply {
+                    scaleX = SCALE_VALUE
+                    scaleY = SCALE_VALUE
+                }
+            } else {
+                //左侧已经隐藏了，所以这里值的是右侧View的scale
+                val scaleFactor = min(SCALE_VALUE - position * 0.1f, SCALE_VALUE)
+                page.apply {
+                    scaleX = scaleFactor
+                    scaleY = scaleFactor
+                }
+            }
+
+            if (position < 0 && position > -1) {
+                page.apply {
+                    rotation = ROTATION * position
+                    alpha = 1f - abs(position)
+                }
+            } else {
+                page.alpha = 1f
+            }
+
+            if (position > 0 && position < 1) {
+                page.rotation = 0f
             }
         }
 
