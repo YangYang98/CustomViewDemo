@@ -14,6 +14,8 @@
         android:theme="@style/Theme.CustomViewDemo"
         tools:targetApi="31">
 
+        <activity android:name=".ui.activity.customer.IrisDiaphragmActivity" android:exported="false" />
+
         <activity android:name=".ui.activity.viewpager.MainViewPagerActivity" android:exported="false" />
 
         <activity android:name=".ui.activity.viewpager.PaletteActivity" android:exported="false" />

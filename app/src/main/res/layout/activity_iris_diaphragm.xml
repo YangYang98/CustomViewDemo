@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:clipChildren="false"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:gravity="center"
+        >
+
+        <com.yang.customviewdemo.ui.widget.IrisDiaphragmView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#CCC"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="-20dp"
+            android:layout_marginBottom="-20dp"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_tiger_run_eat"
+
+                />
+        </com.yang.customviewdemo.ui.widget.IrisDiaphragmView>
+    </RelativeLayout>
+
+
+
+</LinearLayout>

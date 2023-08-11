@@ -40,5 +40,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_parallax_animator).setOnClickListener {
             startActivity(Intent(this, ParallaxAnimatorActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_iris_diaphragm).setOnClickListener {
+            startActivity(Intent(this, IrisDiaphragmActivity::class.java))
+        }
     }
 }
