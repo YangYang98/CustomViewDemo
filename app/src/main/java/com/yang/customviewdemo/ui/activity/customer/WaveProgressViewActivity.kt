@@ -3,6 +3,7 @@ package com.yang.customviewdemo.ui.activity.customer
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.yang.customviewdemo.databinding.ActivityWaveProgressBinding
+import com.yang.customviewdemo.ui.widget.WaveProgressView
 
 
 /**
@@ -19,7 +20,15 @@ class WaveProgressViewActivity : AppCompatActivity() {
         setContentView(mBinding.root)
 
         mBinding.apply {
-            waveProgress.setProgressNum(80f,3000)
+            waveProgress.apply {
+                setProgressNum(80f,3000)
+
+                onAnimationListener = object : WaveProgressView.OnAnimationListener {
+                    override fun howToChangeWaveHeight(percent: Float, defaultHeight: Float): Float {
+                        return (1 - percent) * defaultHeight
+                    }
+                }
+            }
         }
 
     }

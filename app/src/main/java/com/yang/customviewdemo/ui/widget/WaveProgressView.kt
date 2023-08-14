@@ -65,6 +65,8 @@ class WaveProgressView @JvmOverloads constructor(
             }
         }
 
+    var onAnimationListener: OnAnimationListener? = null
+
     init {
 
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.WaveProgressView).apply {
@@ -114,11 +116,18 @@ class WaveProgressView @JvmOverloads constructor(
         mWavePath.apply {
             reset()
             val pathHeight = (1 - percent) * viewRealSize
+            val changeWaveHeight = onAnimationListener?.howToChangeWaveHeight(percent, waveHeight)
+            val realWaveHeight = if (changeWaveHeight != null && changeWaveHeight != 0f) {
+                changeWaveHeight
+            } else {
+                waveHeight
+            }
+
             moveTo(-waveStartPositionX, pathHeight)//起始点移动至(0,waveHeight)
 
             for (i in 0 until waveNum * 2) {
-                rQuadTo(waveWidth / 2, waveHeight, waveWidth, 0f)
-                rQuadTo(waveWidth / 2, -waveHeight, waveWidth, 0f)
+                rQuadTo(waveWidth / 2, realWaveHeight, waveWidth, 0f)
+                rQuadTo(waveWidth / 2, -realWaveHeight, waveWidth, 0f)
             }
 
             lineTo(viewRealSize.toFloat(), viewRealSize.toFloat())
@@ -170,4 +179,8 @@ class WaveProgressView @JvmOverloads constructor(
         }
     }
 
+    interface OnAnimationListener {
+
+        fun howToChangeWaveHeight(percent: Float, defaultHeight: Float): Float
+    }
 }
