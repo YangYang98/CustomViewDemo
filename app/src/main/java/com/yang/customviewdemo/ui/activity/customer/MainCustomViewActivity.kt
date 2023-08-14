@@ -44,5 +44,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_iris_diaphragm).setOnClickListener {
             startActivity(Intent(this, IrisDiaphragmActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_wave_progress).setOnClickListener {
+            startActivity(Intent(this, WaveProgressViewActivity::class.java))
+        }
     }
 }
