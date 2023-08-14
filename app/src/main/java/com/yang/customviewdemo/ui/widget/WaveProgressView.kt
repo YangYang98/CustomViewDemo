@@ -30,11 +30,13 @@ class WaveProgressView @JvmOverloads constructor(
 
     private val mWavePaint: Paint by lazy { Paint() }
     private val mWavePath: Path by lazy { Path() }
+    private val mSecondWavePaint: Paint by lazy { Paint() }
 
     private var waveWidth = 25f.px
     private var waveHeight = 10f.px
-    private var waveColor = Color.WHITE
-    private var bgColor = Color.WHITE
+    private var waveColor = Color.BLUE
+    private var secondWaveColor = Color.BLUE
+    private var bgColor = Color.GRAY
     private val defaultSize = 200.dp
     private val maxHeight = 250f.px
     private var waveNum: Int = (ceil(defaultSize / waveWidth / 2.0)).toInt()
@@ -73,6 +75,7 @@ class WaveProgressView @JvmOverloads constructor(
             waveWidth = getDimension(R.styleable.WaveProgressView_wave_width, 25f.px)
             waveHeight = getDimension(R.styleable.WaveProgressView_wave_height, 10f.px)
             waveColor = getColor(R.styleable.WaveProgressView_wave_color, Color.BLUE)
+            secondWaveColor = getColor(R.styleable.WaveProgressView_wave_second_color, Color.WHITE)
             bgColor = getColor(R.styleable.WaveProgressView_bg_color, Color.GRAY)
 
             recycle()
@@ -80,6 +83,12 @@ class WaveProgressView @JvmOverloads constructor(
 
         mWavePaint.apply {
             color = waveColor
+            isAntiAlias = true
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        }
+
+        mSecondWavePaint.apply {
+            color = secondWaveColor
             isAntiAlias = true
             xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP)
         }
@@ -104,8 +113,11 @@ class WaveProgressView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         //使用缓存
-        bitmapCanvas?.drawCircle(viewRealSize / 2f, viewRealSize / 2f, viewRealSize / 2f, circlePaint)
-        bitmapCanvas?.drawPath(getWavePath(), mWavePaint)
+        bitmapCanvas?.let {
+            it.drawCircle(viewRealSize / 2f, viewRealSize / 2f, viewRealSize / 2f, circlePaint)
+            it.drawPath(getWavePath(), mWavePaint)
+            it.drawPath(getSecondWavePath(), mSecondWavePaint)
+        }
 
         if (cacheBitmap != null) {
             canvas.drawBitmap(cacheBitmap!!, 0f, 0f, null)
@@ -133,6 +145,33 @@ class WaveProgressView @JvmOverloads constructor(
             lineTo(viewRealSize.toFloat(), viewRealSize.toFloat())
             lineTo(0f, viewRealSize.toFloat())
             lineTo(0f, pathHeight)
+
+            close()
+        }
+
+        return mWavePath
+    }
+
+    private fun getSecondWavePath(): Path {
+        mWavePath.apply {
+            reset()
+            val pathHeight = (1 - percent) * viewRealSize
+            val changeWaveHeight = onAnimationListener?.howToChangeWaveHeight(percent, waveHeight)
+            val realWaveHeight = if (changeWaveHeight != null && changeWaveHeight != 0f) {
+                changeWaveHeight
+            } else {
+                waveHeight
+            }
+
+            moveTo(0f, pathHeight)
+            lineTo(0f, viewRealSize.toFloat())
+            lineTo(viewRealSize.toFloat(), viewRealSize.toFloat())
+            lineTo(viewRealSize + waveStartPositionX, pathHeight)
+
+            for (i in 0 until waveNum * 2) {
+                rQuadTo(-waveWidth / 2, realWaveHeight, -waveWidth, 0f)
+                rQuadTo(-waveWidth / 2, -realWaveHeight, -waveWidth, 0f)
+            }
 
             close()
         }

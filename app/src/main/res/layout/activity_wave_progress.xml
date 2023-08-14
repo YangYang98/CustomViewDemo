@@ -9,8 +9,10 @@
         android:id="@+id/wave_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:bg_color="@color/softBlue"
-        app:wave_color="@color/softGreen"
+        app:wave_width="60dp"
+        app:bg_color="@color/softYellow"
+        app:wave_color="@color/yield_line_color"
+        app:wave_second_color="@color/half_yield_line_color"
         />
 
 </LinearLayout>

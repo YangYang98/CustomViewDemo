@@ -37,4 +37,6 @@
     <color name="white5">#261D2129</color>
     <color name="white6">#801D2129</color>
     <color name="transparent">#00000000</color>
+
+    <color name="half_yield_line_color">#80387DF7</color>
 </resources>

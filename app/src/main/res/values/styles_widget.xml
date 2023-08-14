@@ -72,6 +72,7 @@
 
     <declare-styleable name="WaveProgressView">
         <attr name="wave_color" format="color" />
+        <attr name="wave_second_color" format="color" />
         <attr name="bg_color" format="color" />
         <attr name="wave_height" format="dimension" />
         <attr name="wave_width" format="dimension" />
