@@ -190,6 +190,16 @@ class BookPageView @JvmOverloads constructor(
         i.y = ((j.y + k.y) / 2 + h.y) / 2
     }
 
+    private fun calcPointCX(tempA: PointF, tempF: PointF): Float {
+        val tempG = PointF((tempA.x + tempF.x) / 2, (tempA.y + tempF.y) / 2)
+        val tempE = PointF(
+            tempG.x - (tempF.y - tempG.y) * (tempF.y - tempG.y) / (tempF.x - tempG.x),
+            tempF.y
+            )
+
+        return tempE.x - (tempF.x - tempE.x) / 2
+    }
+
     private fun getIntersectionPoint(
         lineOne_pointOne: PointF, lineOne_pointTwo: PointF,
         lineTwo_pointOne: PointF, lineTwo_pointTwo: PointF
@@ -297,9 +307,14 @@ class BookPageView @JvmOverloads constructor(
                 f.y = viewHeight
             }
         }
-        a.x = x
-        a.y = y
-        calcPointsXY(a, f)
+        val touchPoint = PointF(x, y)
+        if (calcPointCX(touchPoint, f) > 0) {
+            a.x = x
+            a.y = y
+            calcPointsXY(a, f)
+        } else {
+            calcPointsXY(a, f)
+        }
         postInvalidate()
     }
 
