@@ -54,8 +54,10 @@ class BookPageView @JvmOverloads constructor(
     private val pathC: Path by lazy { Path() }
 
     init {
-        a.set(400f, 800f)
-        f.set(viewWidth, viewHeight)
+        //a.set(400f, 800f)
+        //f.set(viewWidth, viewHeight)
+        a.set(400f, 200f)
+        f.set(viewWidth, 0f)
 
         calcPointsXY(a, f)
 
@@ -96,7 +98,8 @@ class BookPageView @JvmOverloads constructor(
 
         //canvas.drawRect(0f, 0f, viewWidth, viewHeight, bgPaint)
         bitmapCanvas.apply {
-            drawPath(getPathAFromRightBottom(), pathAPaint)
+            //drawPath(getPathAFromRightBottom(), pathAPaint)
+            drawPath(getPathAFromRightTop(), pathAPaint)
             drawPath(getRealPathC(), pathCPaint)
             drawPath(getRealPathB(), pathBPaint)
         }
@@ -182,6 +185,25 @@ class BookPageView @JvmOverloads constructor(
             lineTo(k.x, k.y)
             quadTo(h.x, h.y, j.x, j.y)
             lineTo(viewWidth, 0f)
+            close()
+        }
+
+        return pathA
+    }
+
+    /**
+     * 获取f点在右上角的pathA
+     */
+    private fun getPathAFromRightTop(): Path {
+        pathA.apply {
+            reset()
+            lineTo(c.x, c.y)
+            quadTo(e.x, e.y, b.x, b.y)
+            lineTo(a.x, a.y)
+            lineTo(k.x, k.y)
+            quadTo(h.x, h.y, j.x, j.y)
+            lineTo(viewWidth, viewHeight)
+            lineTo(0f, viewHeight)
             close()
         }
 
