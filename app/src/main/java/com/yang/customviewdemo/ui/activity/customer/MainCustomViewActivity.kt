@@ -48,5 +48,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_wave_progress).setOnClickListener {
             startActivity(Intent(this, WaveProgressViewActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_book_page_view).setOnClickListener {
+            startActivity(Intent(this, BookPageViewActivity::class.java))
+        }
     }
 }
