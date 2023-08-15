@@ -55,7 +55,12 @@ class BookPageView @JvmOverloads constructor(
     private val pathCPaint: Paint by lazy { Paint() }
     private val pathC: Path by lazy { Path() }
 
+    private var style: String = ""
+
     companion object {
+        const val STYLE_LEFT = "STYLE_LEFT"
+        const val STYLE_RIGHT = "STYLE_RIGHT"
+        const val STYLE_MIDDLE = "STYLE_MIDDLE"
         const val STYLE_TOP_RIGHT = "STYLE_TOP_RIGHT"
         const val STYLE_BOTTOM_RIGHT = "STYLE_BOTTOM_RIGHT"
     }
@@ -308,25 +313,42 @@ class BookPageView @JvmOverloads constructor(
         return pathC
     }
 
-    fun setTouchPoint(x: Float, y: Float, style: String? = null) {
+    fun setTouchPoint(x: Float, y: Float, style: String = "") {
+        a.x = x
+        a.y = y
+        val touchPoint = PointF()
+        this.style = style
+
         when (style) {
+            STYLE_LEFT, STYLE_RIGHT -> {
+                a.y = viewHeight - 1
+                f.x = viewWidth
+                f.y = viewHeight
+                calcPointsXY(a, f)
+            }
+            STYLE_MIDDLE -> {
+
+            }
             STYLE_TOP_RIGHT -> {
                 f.x = viewWidth
                 f.y = 0f
+                calcPointsXY(a, f)
+                touchPoint.set(x, y)
+                if (calcPointCX(touchPoint, f) < 0) {
+                    calcPointAByTouchPoint()
+                    calcPointsXY(a, f)
+                }
             }
             STYLE_BOTTOM_RIGHT -> {
                 f.x = viewWidth
                 f.y = viewHeight
+                touchPoint.set(x, y)
+                calcPointsXY(a, f)
+                if (calcPointCX(touchPoint, f) < 0) {
+                    calcPointAByTouchPoint()
+                    calcPointsXY(a, f)
+                }
             }
-        }
-        a.x = x
-        a.y = y
-        calcPointsXY(a, f)
-
-        val touchPoint = PointF(x, y)
-        if (calcPointCX(touchPoint, f) < 0) {
-            calcPointAByTouchPoint()
-            calcPointsXY(a, f)
         }
 
         postInvalidate()
