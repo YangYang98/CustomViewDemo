@@ -11,6 +11,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
 import android.view.View
+import kotlin.math.min
 
 
 /**
@@ -39,8 +40,8 @@ class BookPageView @JvmOverloads constructor(
 
     private val defaultWidth = 600f
     private val defaultHeight = 1000f
-    private var viewWidth = defaultWidth
-    private var viewHeight = defaultHeight
+    var viewWidth = defaultWidth
+    var viewHeight = defaultHeight
 
     private val pathAPaint: Paint by lazy { Paint() }
     private val pathA: Path by lazy { Path() }
@@ -53,13 +54,12 @@ class BookPageView @JvmOverloads constructor(
     private val pathCPaint: Paint by lazy { Paint() }
     private val pathC: Path by lazy { Path() }
 
-    init {
-        //a.set(400f, 800f)
-        //f.set(viewWidth, viewHeight)
-        a.set(400f, 200f)
-        f.set(viewWidth, 0f)
+    companion object {
+        const val STYLE_TOP_RIGHT = "STYLE_TOP_RIGHT"
+        const val STYLE_BOTTOM_RIGHT = "STYLE_BOTTOM_RIGHT"
+    }
 
-        calcPointsXY(a, f)
+    init {
 
         pointPaint.apply {
             color = Color.RED
@@ -89,19 +89,57 @@ class BookPageView @JvmOverloads constructor(
             xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_ATOP)
         }
 
-        cacheBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
-        bitmapCanvas = Canvas(cacheBitmap)
+        //cacheBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        //bitmapCanvas = Canvas(cacheBitmap)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        val height = measureSize(defaultHeight, heightMeasureSpec)
+        val width = measureSize(defaultWidth, widthMeasureSpec)
+        setMeasuredDimension(width, height)
+
+        viewWidth = width.toFloat()
+        viewHeight = height.toFloat()
+
+        a.set(-1f, -1f)
+    }
+
+    private fun measureSize(defaultSize: Float, measureSpec: Int): Int {
+        var result = defaultSize.toInt()
+        val specMode = MeasureSpec.getMode(measureSpec)
+        val specSize = MeasureSpec.getSize(measureSpec)
+
+        if (specMode == MeasureSpec.EXACTLY) {
+            result = specSize
+        } else if (specMode == MeasureSpec.AT_MOST) {
+            result = min(result, specSize)
+        }
+        return result
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        //TODO 待优化
+        cacheBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        bitmapCanvas = Canvas(cacheBitmap)
+
         //canvas.drawRect(0f, 0f, viewWidth, viewHeight, bgPaint)
         bitmapCanvas.apply {
-            //drawPath(getPathAFromRightBottom(), pathAPaint)
-            drawPath(getPathAFromRightTop(), pathAPaint)
-            drawPath(getRealPathC(), pathCPaint)
-            drawPath(getRealPathB(), pathBPaint)
+
+            if (a.x == -1f && a.y == -1f) {
+                drawPath(getDefaultPath(), pathAPaint)
+            } else {
+                if (f.x == viewWidth && f.y == 0f) {
+                    drawPath(getPathAFromRightTop(), pathAPaint)
+                } else if (f.x == viewWidth && f.y == viewHeight) {
+                    drawPath(getPathAFromRightBottom(), pathAPaint)
+                }
+                drawPath(getRealPathC(), pathCPaint)
+                drawPath(getRealPathB(), pathBPaint)
+            }
         }
 
         canvas.drawBitmap(cacheBitmap, 0f, 0f, null)
@@ -172,6 +210,18 @@ class BookPageView @JvmOverloads constructor(
         return PointF(pointX, pointY)
     }
 
+    private fun getDefaultPath(): Path {
+        pathA.apply {
+            reset()
+            lineTo(0f, viewHeight)
+            lineTo(viewWidth, viewHeight)
+            lineTo(viewWidth, 0f)
+            close()
+        }
+
+        return pathA
+    }
+
     /**
      * 获取f点在右下角的pathA
      */
@@ -235,5 +285,29 @@ class BookPageView @JvmOverloads constructor(
 
         return pathC
     }
+
+    fun setTouchPoint(x: Float, y: Float, style: String? = null) {
+        when (style) {
+            STYLE_TOP_RIGHT -> {
+                f.x = viewWidth
+                f.y = 0f
+            }
+            STYLE_BOTTOM_RIGHT -> {
+                f.x = viewWidth
+                f.y = viewHeight
+            }
+        }
+        a.x = x
+        a.y = y
+        calcPointsXY(a, f)
+        postInvalidate()
+    }
+
+    fun reset() {
+        a.x = -1f
+        a.y = -1f
+        postInvalidate()
+    }
+
 
 }
