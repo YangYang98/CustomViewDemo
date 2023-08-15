@@ -53,7 +53,7 @@ class BookPageViewActivity: AppCompatActivity() {
                         this.setTouchPoint(event.x, event.y, currentStyle)
                     }
                     MotionEvent.ACTION_UP -> {
-                        this.reset()
+                        this.startCancelAnim()
                     }
                 }
 

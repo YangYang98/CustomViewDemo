@@ -11,6 +11,8 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.LinearInterpolator
+import android.widget.Scroller
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -56,6 +58,8 @@ class BookPageView @JvmOverloads constructor(
     private val pathC: Path by lazy { Path() }
 
     private var style: String = ""
+
+    private val scroller: Scroller by lazy { Scroller(context, LinearInterpolator()) }
 
     companion object {
         const val STYLE_LEFT = "STYLE_LEFT"
@@ -360,5 +364,35 @@ class BookPageView @JvmOverloads constructor(
         postInvalidate()
     }
 
+    override fun computeScroll() {
+        if (scroller.computeScrollOffset()) {
+            val x = (scroller.currX).toFloat()
+            val y = (scroller.currY).toFloat()
 
+            if (style == STYLE_TOP_RIGHT) {
+                setTouchPoint(x, y, style)
+            } else {
+                setTouchPoint(x, y, style)
+            }
+
+            if (scroller.finalX == x.toInt() && scroller.finalY == y.toInt()) {
+                reset()
+            }
+        }
+    }
+
+    fun startCancelAnim() {
+        val dx: Int
+        val dy: Int
+
+        if (style == STYLE_TOP_RIGHT) {
+            dx = (viewWidth - 1 - a.x).toInt()
+            dy = (1 - a.y).toInt()
+        } else {
+            dx = (viewWidth - 1 - a.x).toInt()
+            dy = (viewHeight - 1 - a.y).toInt()
+        }
+
+        scroller.startScroll(a.x.toInt(), a.y.toInt(), dx, dy, 400)
+    }
 }
