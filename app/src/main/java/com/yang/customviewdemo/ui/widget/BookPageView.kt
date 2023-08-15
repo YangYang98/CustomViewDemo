@@ -11,6 +11,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
 import android.view.View
+import kotlin.math.abs
 import kotlin.math.min
 
 
@@ -200,6 +201,17 @@ class BookPageView @JvmOverloads constructor(
         return tempE.x - (tempF.x - tempE.x) / 2
     }
 
+    private fun calcPointAByTouchPoint() {
+        val w0 = viewWidth - c.x
+        val w1 = abs(f.x - a.x)
+        val w2 = viewWidth * w1 / w0
+        a.x = abs(f.x - w2)
+
+        val h1 = abs(f.y - a.y)
+        val h2 = h1 * w2 / w1
+        a.y = abs(f.y - h2)
+    }
+
     private fun getIntersectionPoint(
         lineOne_pointOne: PointF, lineOne_pointTwo: PointF,
         lineTwo_pointOne: PointF, lineTwo_pointTwo: PointF
@@ -307,14 +319,16 @@ class BookPageView @JvmOverloads constructor(
                 f.y = viewHeight
             }
         }
+        a.x = x
+        a.y = y
+        calcPointsXY(a, f)
+
         val touchPoint = PointF(x, y)
-        if (calcPointCX(touchPoint, f) > 0) {
-            a.x = x
-            a.y = y
-            calcPointsXY(a, f)
-        } else {
+        if (calcPointCX(touchPoint, f) < 0) {
+            calcPointAByTouchPoint()
             calcPointsXY(a, f)
         }
+
         postInvalidate()
     }
 
