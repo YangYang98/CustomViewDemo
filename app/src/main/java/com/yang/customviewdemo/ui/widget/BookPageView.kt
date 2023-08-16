@@ -9,6 +9,8 @@ import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.Region
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -61,6 +63,9 @@ class BookPageView @JvmOverloads constructor(
 
     private val scroller: Scroller by lazy { Scroller(context, LinearInterpolator()) }
 
+    //绘制内容
+    private val textPaint: Paint by lazy { Paint() }
+
     companion object {
         const val STYLE_LEFT = "STYLE_LEFT"
         const val STYLE_RIGHT = "STYLE_RIGHT"
@@ -99,8 +104,12 @@ class BookPageView @JvmOverloads constructor(
             xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_ATOP)
         }
 
-        //cacheBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
-        //bitmapCanvas = Canvas(cacheBitmap)
+        textPaint.apply {
+            color = Color.BLACK
+            textAlign = Paint.Align.CENTER
+            isSubpixelText = true//设置自像素。如果该项为true，将有助于文本在LCD屏幕上的显示效果。
+            textSize = 30f
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -140,15 +149,22 @@ class BookPageView @JvmOverloads constructor(
         bitmapCanvas.apply {
 
             if (a.x == -1f && a.y == -1f) {
-                drawPath(getDefaultPath(), pathAPaint)
+                //drawPath(getDefaultPath(), pathAPaint)
+                drawPathAContent(this, getDefaultPath(), pathAPaint)
             } else {
                 if (f.x == viewWidth && f.y == 0f) {
-                    drawPath(getPathAFromRightTop(), pathAPaint)
+                    //drawPath(getPathAFromRightTop(), pathAPaint)
+                    drawPathAContent(this, getPathAFromRightTop(), pathAPaint)
+                    drawPath(getRealPathC(), pathCPaint)
+                    drawPathBContent(this, getPathAFromRightTop(), pathBPaint)
                 } else if (f.x == viewWidth && f.y == viewHeight) {
-                    drawPath(getPathAFromRightBottom(), pathAPaint)
+                    //drawPath(getPathAFromRightBottom(), pathAPaint)
+                    drawPathAContent(this, getPathAFromRightBottom(), pathAPaint)
+                    drawPath(getRealPathC(), pathCPaint)
+                    drawPathBContent(this, getPathAFromRightBottom(), pathBPaint)
                 }
-                drawPath(getRealPathC(), pathCPaint)
-                drawPath(getRealPathB(), pathBPaint)
+                //drawPath(getRealPathC(), pathCPaint)
+                //drawPath(getRealPathB(), pathBPaint)
             }
         }
 
@@ -170,6 +186,53 @@ class BookPageView @JvmOverloads constructor(
         canvas.drawText("d",d.x,d.y,pointPaint)
         canvas.drawText("i",i.x,i.y,pointPaint)
 
+    }
+
+    private fun drawPathAContent(canvas: Canvas, pathA: Path, pathPaint: Paint) {
+        val contentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        val contentCanvas = Canvas(contentBitmap)
+
+        contentCanvas.apply {
+            drawPath(pathA, pathPaint)
+            drawText("AAAAAA区域A内容AAAAAA", viewWidth - 300, viewHeight - 200, textPaint)
+        }
+        canvas.apply {
+            save()
+            clipPath(pathA, Region.Op.INTERSECT)
+            drawBitmap(contentBitmap, 0f, 0f, null)
+            restore()
+        }
+    }
+
+    /**
+     * B区域内容取的是B区域不同于AC区域全集的部分
+     */
+    private fun drawPathBContent(canvas: Canvas, pathA: Path, pathPaint: Paint) {
+        val contentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        val contentCanvas = Canvas(contentBitmap)
+
+        contentCanvas.apply {
+            drawPath(getRealPathB(), pathPaint)
+            drawText("BBBBBB区域B内容BBBBBB", viewWidth - 300, viewHeight - 200, textPaint)
+        }
+
+        canvas.apply {
+            save()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val pathC = getRealPathC()
+                pathC.op(pathA, Path.Op.UNION)//此时pathC就是PathA和PathC的合集
+                val pathB = getRealPathB()
+                pathB.op(pathC, Path.Op.XOR)//创建一个PathB和(PathA和PathC合集)的Op.XOR,此时pathB就是PathB不同于(PathA和PathC合集)的部分
+                clipPath(pathB)
+            } else {
+                clipPath(pathA)//裁剪出A区域
+                clipPath(getRealPathC(), Region.Op.UNION)//裁剪出A和C区域的全集
+                clipPath(getRealPathB(), Region.Op.REVERSE_DIFFERENCE) //裁剪出B区域中不同于与AC区域的部分
+            }
+            drawBitmap(contentBitmap, 0f, 0f, null)
+            restore()
+        }
     }
 
     private fun calcPointsXY(a: PointF, f: PointF) {
@@ -393,6 +456,6 @@ class BookPageView @JvmOverloads constructor(
             dy = (viewHeight - 1 - a.y).toInt()
         }
 
-        scroller.startScroll(a.x.toInt(), a.y.toInt(), dx, dy, 400)
+        scroller.startScroll(a.x.toInt(), a.y.toInt(), dx, dy, 200)
     }
 }
