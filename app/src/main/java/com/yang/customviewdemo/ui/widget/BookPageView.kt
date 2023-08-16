@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
@@ -15,7 +16,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Scroller
+import com.yang.customviewdemo.R
 import kotlin.math.abs
+import kotlin.math.hypot
 import kotlin.math.min
 
 
@@ -65,6 +68,7 @@ class BookPageView @JvmOverloads constructor(
 
     //绘制内容
     private val textPaint: Paint by lazy { Paint() }
+    private val pathCContentPaint: Paint by lazy { Paint() }
 
     companion object {
         const val STYLE_LEFT = "STYLE_LEFT"
@@ -86,19 +90,19 @@ class BookPageView @JvmOverloads constructor(
         }
 
         pathAPaint.apply {
-            color = Color.GREEN
+            color = resources.getColor(R.color.softGreen)
             isAntiAlias = true
         }
 
         pathBPaint.apply {
-            color = Color.BLUE
+            color = resources.getColor(R.color.softBlue)
             isAntiAlias = true
 
             xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_ATOP)
         }
 
         pathCPaint.apply {
-            color = Color.YELLOW
+            color = resources.getColor(R.color.softYellow)
             isAntiAlias = true
 
             xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_ATOP)
@@ -109,6 +113,11 @@ class BookPageView @JvmOverloads constructor(
             textAlign = Paint.Align.CENTER
             isSubpixelText = true//设置自像素。如果该项为true，将有助于文本在LCD屏幕上的显示效果。
             textSize = 30f
+        }
+
+        pathCContentPaint.apply {
+            color = resources.getColor(R.color.softYellow)
+            isAntiAlias = true
         }
     }
 
@@ -156,11 +165,13 @@ class BookPageView @JvmOverloads constructor(
                     //drawPath(getPathAFromRightTop(), pathAPaint)
                     drawPathAContent(this, getPathAFromRightTop(), pathAPaint)
                     drawPath(getRealPathC(), pathCPaint)
+                    drawPathCContent(this, getPathAFromRightTop(), pathCContentPaint)
                     drawPathBContent(this, getPathAFromRightTop(), pathBPaint)
                 } else if (f.x == viewWidth && f.y == viewHeight) {
                     //drawPath(getPathAFromRightBottom(), pathAPaint)
                     drawPathAContent(this, getPathAFromRightBottom(), pathAPaint)
                     drawPath(getRealPathC(), pathCPaint)
+                    drawPathCContent(this, getPathAFromRightBottom(), pathCContentPaint)
                     drawPathBContent(this, getPathAFromRightBottom(), pathBPaint)
                 }
                 //drawPath(getRealPathC(), pathCPaint)
@@ -194,7 +205,7 @@ class BookPageView @JvmOverloads constructor(
 
         contentCanvas.apply {
             drawPath(pathA, pathPaint)
-            drawText("AAAAAA区域A内容AAAAAA", viewWidth - 300, viewHeight - 200, textPaint)
+            drawText("AAAAAA区域A内容aaaaaa", viewWidth, viewHeight - 200, textPaint)
         }
         canvas.apply {
             save()
@@ -231,6 +242,48 @@ class BookPageView @JvmOverloads constructor(
                 clipPath(getRealPathB(), Region.Op.REVERSE_DIFFERENCE) //裁剪出B区域中不同于与AC区域的部分
             }
             drawBitmap(contentBitmap, 0f, 0f, null)
+            restore()
+        }
+    }
+
+    private fun drawPathCContent(canvas: Canvas, pathA: Path, pathPaint: Paint) {
+        val contentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        val contentCanvas = Canvas(contentBitmap)
+
+        contentCanvas.apply {
+            drawPath(getRealPathB(), pathPaint)
+            drawText("AAAAAA区域A内容aaaaaa", viewWidth, viewHeight - 200, textPaint)
+        }
+
+        canvas.apply {
+            save()
+
+            val pathC = getRealPathC()
+            //pathC.op(pathA, Path.Op.XOR)//裁剪出C区域不同于A区域的部分
+            pathC.op(pathA, Path.Op.UNION)//裁剪出A和C区域的全集
+            clipPath(pathC)
+
+            val eh = hypot((f.x - e.x).toDouble(), (f.y - h.y).toDouble())//sqrt(x2+y2)
+            val sin0 = ((f.x - e.x) / eh).toFloat()
+            val cos0 = ((h.y - f.y) / eh).toFloat()
+
+            //设置翻转和旋转矩阵
+            val matrixArray = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1.0f).apply {
+                this[0] = -(1 - 2 * sin0 * sin0)
+                this[1] = 2 * sin0 * cos0
+                this[3] = 2 * sin0 * cos0
+                this[4] = 1 - 2 * sin0 * sin0
+            }
+
+            val matrix = Matrix().apply {
+                reset()
+                setValues(matrixArray)
+                preTranslate(-e.x, -e.y)//沿当前XY轴负方向位移得到
+                postTranslate(e.x, e.y)//沿原XY轴方向位移得到
+            }
+
+            drawBitmap(contentBitmap, matrix, null)
+
             restore()
         }
     }
