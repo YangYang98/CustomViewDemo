@@ -26,6 +26,7 @@ class BookPageViewActivity: AppCompatActivity() {
         setContentView(mBinding.root)
 
         mBinding.viewBookPage.apply {
+            isDebug = false
             setOnTouchListener { v, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
