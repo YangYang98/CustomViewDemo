@@ -131,7 +131,7 @@ class BookPageView @JvmOverloads constructor(
             color = resources.getColor(R.color.softYellow)
             isAntiAlias = true
 
-            xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_ATOP)
+            //xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_ATOP)
         }
 
         textPaint.apply {
@@ -264,13 +264,11 @@ class BookPageView @JvmOverloads constructor(
                 if (f.x == viewWidth && f.y == 0f) {
                     //drawPath(getPathAFromRightTop(), pathAPaint)
                     drawPathAContent(this, getPathAFromRightTop(), pathAPaint)
-                    drawPath(getRealPathC(), pathCPaint)
                     drawPathCContent(this, getPathAFromRightTop(), pathCContentPaint)
                     drawPathBContent(this, getPathAFromRightTop(), pathBPaint)
                 } else if (f.x == viewWidth && f.y == viewHeight) {
                     //drawPath(getPathAFromRightBottom(), pathAPaint)
                     drawPathAContent(this, getPathAFromRightBottom(), pathAPaint)
-                    drawPath(getRealPathC(), pathCPaint)
                     drawPathCContent(this, getPathAFromRightBottom(), pathCContentPaint)
                     drawPathBContent(this, getPathAFromRightBottom(), pathBPaint)
                 }
@@ -493,6 +491,7 @@ class BookPageView @JvmOverloads constructor(
             val pathC = getRealPathC()
             pathC.op(pathA, Path.Op.DIFFERENCE)//裁剪出C区域不同于A区域的部分
             clipPath(pathC)
+            drawPath(getRealPathC(), pathCPaint)
 
             val eh = hypot((f.x - e.x).toDouble(), (f.y - h.y).toDouble())//sqrt(x2+y2)
             val sin0 = ((f.x - e.x) / eh).toFloat()
