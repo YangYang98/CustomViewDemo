@@ -220,8 +220,12 @@ class BookPageView @JvmOverloads constructor(
             clipPath(pathA, Region.Op.INTERSECT)
             drawBitmap(contentBitmap, 0f, 0f, null)
 
-            drawPathALeftShadow(this, pathA)
-            drawPathARightShadow(this, pathA)
+            if (style == STYLE_LEFT || style == STYLE_RIGHT) {
+                drawPathAHorizontalShadow(this, pathA)
+            } else {
+                drawPathALeftShadow(this, pathA)
+                drawPathARightShadow(this, pathA)
+            }
             restore()
         }
     }
@@ -324,6 +328,36 @@ class BookPageView @JvmOverloads constructor(
 
         val rotateDegrees = (Math.toDegrees(atan2((a.y - h.y).toDouble(), (a.x - h.x).toDouble()))).toFloat()
         canvas.rotate(rotateDegrees, h.x, h.y)
+        gradientDrawable.draw(canvas)
+    }
+
+    /**
+     * 绘制A区域水平翻页阴影
+     */
+    private fun drawPathAHorizontalShadow(canvas: Canvas, pathA: Path) {
+        canvas.restore()
+        canvas.save()
+
+        val deepColor = 0x44333333
+        val lightColor = 0x01333333
+
+        val gradientColors = intArrayOf(lightColor, deepColor)
+
+        val maxShadowWidth = 30f //阴影矩形最大的宽度
+        val left: Int = (a.x - max(maxShadowWidth, rPathAShadowDis / 2)).toInt()
+        val top: Int = 0
+        val right: Int = (a.x).toInt()
+        val bottom: Int = viewHeight.toInt()
+
+        val gradientDrawable: GradientDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+            setBounds(left, top, right, bottom)
+        }
+
+        canvas.clipPath(pathA)
+
+        val rotateDegrees = (Math.toDegrees(atan2((f.x - a.x).toDouble(), (f.y - h.y).toDouble()))).toFloat()
+        canvas.rotate(rotateDegrees, a.x, a.y)
         gradientDrawable.draw(canvas)
     }
 
