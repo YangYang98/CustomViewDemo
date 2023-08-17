@@ -80,6 +80,22 @@ class BookPageView @JvmOverloads constructor(
     private var lPathAShadowDis = 0f //A区域左阴影矩形短边长度参考值
     private var rPathAShadowDis = 0f //A区域右阴影矩形短边长度参考值
 
+    private lateinit var pathAContentBitmap: Bitmap
+    private lateinit var pathBContentBitmap: Bitmap
+    private lateinit var pathCContentBitmap: Bitmap
+
+    private val mMatrixArray = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1.0f)
+    private val mMatrix: Matrix by lazy { Matrix() }
+    private lateinit var drawableLeftTopRight: GradientDrawable
+    private lateinit var drawableLeftBottomRight: GradientDrawable
+    private lateinit var drawableRightTopRight: GradientDrawable
+    private lateinit var drawableRightBottomRight: GradientDrawable
+    private lateinit var drawableHorizontalBottomRight: GradientDrawable
+    private lateinit var drawableBTopRight: GradientDrawable
+    private lateinit var drawableBBottomRight: GradientDrawable
+    private lateinit var drawableCTopRight: GradientDrawable
+    private lateinit var drawableCBottomRight: GradientDrawable
+
     companion object {
         const val STYLE_LEFT = "STYLE_LEFT"
         const val STYLE_RIGHT = "STYLE_RIGHT"
@@ -129,6 +145,59 @@ class BookPageView @JvmOverloads constructor(
             color = resources.getColor(R.color.softYellow)
             isAntiAlias = true
         }
+
+        createGradientDrawable()
+    }
+
+    private fun createGradientDrawable() {
+        var deepColor = 0x33333333
+        var lightColor = 0x01333333
+        var gradientColors = intArrayOf(lightColor, deepColor)
+
+        drawableLeftTopRight = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+        drawableLeftBottomRight = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+
+        deepColor = 0x22333333
+        lightColor = 0x01333333
+        gradientColors = intArrayOf(deepColor, lightColor, lightColor)
+        drawableRightTopRight = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+        drawableRightBottomRight = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+
+        deepColor = 0x44333333
+        lightColor = 0x01333333
+        gradientColors = intArrayOf(lightColor, deepColor)
+        drawableHorizontalBottomRight = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+
+        deepColor = 0x55111111
+        lightColor = 0x00111111
+        gradientColors = intArrayOf(deepColor, lightColor)
+        drawableBTopRight = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+        drawableBBottomRight = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+
+        deepColor = 0x55333333
+        lightColor = 0x00333333
+        gradientColors = intArrayOf(lightColor, deepColor)
+        drawableCTopRight = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+        drawableCBottomRight = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, gradientColors).apply {
+            gradientType = GradientDrawable.LINEAR_GRADIENT
+        }
+
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -142,6 +211,13 @@ class BookPageView @JvmOverloads constructor(
         viewHeight = height.toFloat()
 
         a.set(-1f, -1f)
+
+        pathAContentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        drawPathAContentBitmap(pathAContentBitmap, pathAPaint)
+        pathBContentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        drawPathBContentBitmap(pathBContentBitmap, pathBPaint)
+        pathCContentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        drawPathAContentBitmap(pathCContentBitmap, pathCPaint)
     }
 
     private fun measureSize(defaultSize: Float, measureSpec: Int): Int {
@@ -157,15 +233,29 @@ class BookPageView @JvmOverloads constructor(
         return result
     }
 
+    private fun drawPathAContentBitmap(bitmap: Bitmap, pathPaint: Paint) {
+        val canvas = Canvas(bitmap).apply {
+            drawPath(getDefaultPath(), pathPaint)
+            drawText("AAAAAA区域A内容aaaaaa", viewWidth - 100, viewHeight - 200, textPaint)
+        }
+    }
+
+    private fun drawPathBContentBitmap(bitmap: Bitmap, pathPaint: Paint) {
+        val canvas = Canvas(bitmap).apply {
+            drawPath(getDefaultPath(), pathPaint)
+            drawText("BBBBBB区域B内容BBBBBB", viewWidth - 300, viewHeight - 200, textPaint)
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         //TODO 待优化
-        cacheBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
-        bitmapCanvas = Canvas(cacheBitmap)
+        //cacheBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
+        //bitmapCanvas = Canvas(cacheBitmap)
 
         //canvas.drawRect(0f, 0f, viewWidth, viewHeight, bgPaint)
-        bitmapCanvas.apply {
+        canvas.apply {
 
             if (a.x == -1f && a.y == -1f) {
                 //drawPath(getDefaultPath(), pathAPaint)
@@ -189,7 +279,7 @@ class BookPageView @JvmOverloads constructor(
             }
         }
 
-        canvas.drawBitmap(cacheBitmap, 0f, 0f, null)
+        //canvas.drawBitmap(cacheBitmap, 0f, 0f, null)
 
         canvas.drawText("a",a.x,a.y,pointPaint)
         canvas.drawText("f",f.x,f.y,pointPaint)
@@ -210,17 +300,10 @@ class BookPageView @JvmOverloads constructor(
     }
 
     private fun drawPathAContent(canvas: Canvas, pathA: Path, pathPaint: Paint) {
-        val contentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
-        val contentCanvas = Canvas(contentBitmap)
-
-        contentCanvas.apply {
-            drawPath(pathA, pathPaint)
-            drawText("AAAAAA区域A内容aaaaaa", viewWidth - 100, viewHeight - 200, textPaint)
-        }
         canvas.apply {
             save()
             clipPath(pathA, Region.Op.INTERSECT)
-            drawBitmap(contentBitmap, 0f, 0f, null)
+            drawBitmap(pathAContentBitmap, 0f, 0f, null)
 
             if (style == STYLE_LEFT || style == STYLE_RIGHT) {
                 drawPathAHorizontalShadow(this, pathA)
@@ -239,10 +322,6 @@ class BookPageView @JvmOverloads constructor(
         canvas.restore()
         canvas.save()
 
-        val deepColor = 0x33333333
-        val lightColor = 0x01333333
-
-        val gradientColors = intArrayOf(lightColor, deepColor)
         val left: Int
         val top: Int = (e.y).toInt()
         val right: Int
@@ -251,16 +330,12 @@ class BookPageView @JvmOverloads constructor(
         val gradientDrawable: GradientDrawable
         if (style == STYLE_TOP_RIGHT) {
             //从左向右线性渐变
-            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
-                gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
+            gradientDrawable = drawableLeftTopRight
             left = (e.x - lPathAShadowDis / 2).toInt()
             right = e.x.toInt()
         } else {
             //从右向左线性渐变
-            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, gradientColors).apply {
-                gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
+            gradientDrawable = drawableLeftBottomRight
             left = e.x.toInt()
             right = (e.x + lPathAShadowDis / 2).toInt()
         }
@@ -290,11 +365,7 @@ class BookPageView @JvmOverloads constructor(
         canvas.restore()
         canvas.save()
 
-        val deepColor = 0x33333333
-        val lightColor = 0x01333333
-
         val viewDiagonalLength = hypot(viewWidth, viewHeight)
-        val gradientColors = intArrayOf(deepColor, lightColor)
         val left: Int = (h.x).toInt()
         val top: Int
         val right: Int = (h.x + viewDiagonalLength * 10).toInt()
@@ -302,15 +373,11 @@ class BookPageView @JvmOverloads constructor(
 
         val gradientDrawable: GradientDrawable
         if (style == STYLE_TOP_RIGHT) {
-            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, gradientColors).apply {
-                gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
+            gradientDrawable = drawableRightTopRight
             top = (h.y - rPathAShadowDis / 2).toInt()
             bottom = h.y.toInt()
         } else {
-            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, gradientColors).apply {
-                gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
+            gradientDrawable = drawableRightBottomRight
             top = h.y.toInt()
             bottom = (h.y + rPathAShadowDis / 2).toInt()
         }
@@ -340,19 +407,13 @@ class BookPageView @JvmOverloads constructor(
         canvas.restore()
         canvas.save()
 
-        val deepColor = 0x44333333
-        val lightColor = 0x01333333
-
-        val gradientColors = intArrayOf(lightColor, deepColor)
-
         val maxShadowWidth = 30f //阴影矩形最大的宽度
         val left: Int = (a.x - max(maxShadowWidth, rPathAShadowDis / 2)).toInt()
         val top: Int = 0
         val right: Int = (a.x).toInt()
         val bottom: Int = viewHeight.toInt()
 
-        val gradientDrawable: GradientDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
-            gradientType = GradientDrawable.LINEAR_GRADIENT
+        val gradientDrawable: GradientDrawable = drawableHorizontalBottomRight.apply {
             setBounds(left, top, right, bottom)
         }
 
@@ -367,13 +428,6 @@ class BookPageView @JvmOverloads constructor(
      * B区域内容取的是B区域不同于AC区域全集的部分
      */
     private fun drawPathBContent(canvas: Canvas, pathA: Path, pathPaint: Paint) {
-        val contentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
-        val contentCanvas = Canvas(contentBitmap)
-
-        contentCanvas.apply {
-            drawPath(getRealPathB(), pathPaint)
-            drawText("BBBBBB区域B内容BBBBBB", viewWidth - 300, viewHeight - 200, textPaint)
-        }
 
         canvas.apply {
             save()
@@ -389,7 +443,7 @@ class BookPageView @JvmOverloads constructor(
                 clipPath(getRealPathC(), Region.Op.UNION)//裁剪出A和C区域的全集
                 clipPath(getRealPathB(), Region.Op.REVERSE_DIFFERENCE) //裁剪出B区域中不同于与AC区域的部分
             }
-            drawBitmap(contentBitmap, 0f, 0f, null)
+            drawBitmap(pathBContentBitmap, 0f, 0f, null)
 
             if (isDebug) {
                 restore()
@@ -401,9 +455,6 @@ class BookPageView @JvmOverloads constructor(
     }
 
     private fun drawPathBShadow(canvas: Canvas) {
-        val deepColor = 0x55111111
-        val lightColor = 0x00111111
-        val gradientColors = intArrayOf(deepColor, lightColor)
 
         var deepOffset = 0
         var lightOffset = 0
@@ -418,16 +469,12 @@ class BookPageView @JvmOverloads constructor(
         val gradientDrawable: GradientDrawable
         if (style == STYLE_TOP_RIGHT) {
             //从左向右线性渐变
-            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
-                gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
+            gradientDrawable = drawableBTopRight
             left = (c.x - deepOffset).toInt()
             right = (c.x + aTof / 4 + lightOffset).toInt()
         } else {
             //从右向左线性渐变
-            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, gradientColors).apply {
-                gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
+            gradientDrawable = drawableBBottomRight
             left = (c.x - aTof / 4 - lightOffset).toInt()
             right = (c.x + deepOffset).toInt()
         }
@@ -439,13 +486,6 @@ class BookPageView @JvmOverloads constructor(
     }
 
     private fun drawPathCContent(canvas: Canvas, pathA: Path, pathPaint: Paint) {
-        val contentBitmap = Bitmap.createBitmap(viewWidth.toInt(), viewHeight.toInt(), Bitmap.Config.ARGB_8888)
-        val contentCanvas = Canvas(contentBitmap)
-
-        contentCanvas.apply {
-            drawPath(getRealPathB(), pathPaint)
-            drawText("AAAAAA区域A内容aaaaaa", viewWidth - 100, viewHeight - 200, textPaint)
-        }
 
         canvas.apply {
             save()
@@ -459,21 +499,21 @@ class BookPageView @JvmOverloads constructor(
             val cos0 = ((h.y - f.y) / eh).toFloat()
 
             //设置翻转和旋转矩阵
-            val matrixArray = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1.0f).apply {
+            val matrixArray = mMatrixArray.apply {
                 this[0] = -(1 - 2 * sin0 * sin0)
                 this[1] = 2 * sin0 * cos0
                 this[3] = 2 * sin0 * cos0
                 this[4] = 1 - 2 * sin0 * sin0
             }
 
-            val matrix = Matrix().apply {
+            val matrix = mMatrix.apply {
                 reset()
                 setValues(matrixArray)
                 preTranslate(-e.x, -e.y)//沿当前XY轴负方向位移得到
                 postTranslate(e.x, e.y)//沿原XY轴方向位移得到
             }
 
-            drawBitmap(contentBitmap, matrix, null)
+            drawBitmap(pathCContentBitmap, matrix, null)
 
             //restore()
             //save()
@@ -484,11 +524,6 @@ class BookPageView @JvmOverloads constructor(
     }
 
     private fun drawPathCShadow(canvas: Canvas) {
-        val deepColor = 0x55111111
-        val lightColor = 0x00111111
-        //val deepColor = Color.RED
-        //val lightColor = Color.GREEN
-        val gradientColors = intArrayOf(lightColor, deepColor)
 
         var deepOffset = 1
         var lightOffset = -30
@@ -505,16 +540,12 @@ class BookPageView @JvmOverloads constructor(
         val gradientDrawable: GradientDrawable
         if (style == STYLE_TOP_RIGHT) {
             //从左向右线性渐变
-            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
-                gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
+            gradientDrawable = drawableCTopRight
             left = (c.x - lightOffset).toInt()
             right = (c.x + minDisToControlPoint + deepOffset).toInt()
         } else {
             //从右向左线性渐变
-            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, gradientColors).apply {
-                gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
+            gradientDrawable = drawableCBottomRight
             left = (c.x - minDisToControlPoint - deepOffset).toInt()
             right = (c.x + lightOffset).toInt()
         }
