@@ -21,6 +21,7 @@ import com.yang.customviewdemo.R
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.hypot
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -73,6 +74,9 @@ class BookPageView @JvmOverloads constructor(
     //绘制内容
     private val textPaint: Paint by lazy { Paint() }
     private val pathCContentPaint: Paint by lazy { Paint() }
+
+    private var lPathAShadowDis = 0f //A区域左阴影矩形短边长度参考值
+    private var rPathAShadowDis = 0f //A区域右阴影矩形短边长度参考值
 
     companion object {
         const val STYLE_LEFT = "STYLE_LEFT"
@@ -215,8 +219,112 @@ class BookPageView @JvmOverloads constructor(
             save()
             clipPath(pathA, Region.Op.INTERSECT)
             drawBitmap(contentBitmap, 0f, 0f, null)
+
+            drawPathALeftShadow(this, pathA)
+            drawPathARightShadow(this, pathA)
             restore()
         }
+    }
+
+    /**
+     * 绘制A区域左阴影
+     */
+    private fun drawPathALeftShadow(canvas: Canvas, pathA: Path) {
+        canvas.restore()
+        canvas.save()
+
+        val deepColor = 0x33333333
+        val lightColor = 0x01333333
+
+        val gradientColors = intArrayOf(lightColor, deepColor)
+        val left: Int
+        val top: Int = (e.y).toInt()
+        val right: Int
+        val bottom = (e.y + viewHeight).toInt()
+
+        val gradientDrawable: GradientDrawable
+        if (style == STYLE_TOP_RIGHT) {
+            //从左向右线性渐变
+            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColors).apply {
+                gradientType = GradientDrawable.LINEAR_GRADIENT
+            }
+            left = (e.x - lPathAShadowDis / 2).toInt()
+            right = e.x.toInt()
+        } else {
+            //从右向左线性渐变
+            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, gradientColors).apply {
+                gradientType = GradientDrawable.LINEAR_GRADIENT
+            }
+            left = e.x.toInt()
+            right = (e.x + lPathAShadowDis / 2).toInt()
+        }
+
+        //裁剪出需要的区域
+        val tempPath = Path().apply {
+            moveTo(a.x - max(rPathAShadowDis, lPathAShadowDis) / 2, a.y)
+            lineTo(d.x, d.y)
+            lineTo(e.x, e.y)
+            lineTo(a.x, a.y)
+            close()
+        }
+        canvas.clipPath(pathA)
+        canvas.clipPath(tempPath)
+
+        gradientDrawable.setBounds(left, top, right, bottom)
+
+        val rotateDegrees = (Math.toDegrees(atan2((e.x - a.x).toDouble(), (a.y - e.y).toDouble()))).toFloat()
+        canvas.rotate(rotateDegrees, e.x, e.y)
+        gradientDrawable.draw(canvas)
+    }
+
+    /**
+     * 绘制A区域右阴影
+     */
+    private fun drawPathARightShadow(canvas: Canvas, pathA: Path) {
+        canvas.restore()
+        canvas.save()
+
+        val deepColor = 0x33333333
+        val lightColor = 0x01333333
+
+        val viewDiagonalLength = hypot(viewWidth, viewHeight)
+        val gradientColors = intArrayOf(deepColor, lightColor)
+        val left: Int = (h.x).toInt()
+        val top: Int
+        val right: Int = (h.x + viewDiagonalLength * 10).toInt()
+        val bottom: Int
+
+        val gradientDrawable: GradientDrawable
+        if (style == STYLE_TOP_RIGHT) {
+            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, gradientColors).apply {
+                gradientType = GradientDrawable.LINEAR_GRADIENT
+            }
+            top = (h.y - rPathAShadowDis / 2).toInt()
+            bottom = h.y.toInt()
+        } else {
+            gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, gradientColors).apply {
+                gradientType = GradientDrawable.LINEAR_GRADIENT
+            }
+            top = h.y.toInt()
+            bottom = (h.y + rPathAShadowDis / 2).toInt()
+        }
+        gradientDrawable.setBounds(left, top, right, bottom)
+
+        //裁剪出需要的区域
+        val tempPath = Path().apply {
+            val offset = max(rPathAShadowDis, lPathAShadowDis) / 2
+            moveTo(a.x - offset, a.y)
+            //lineTo(i.x, i.y)
+            lineTo(h.x, h.y)
+            lineTo(a.x, a.y)
+            close()
+        }
+        canvas.clipPath(pathA)
+        canvas.clipPath(tempPath)
+
+        val rotateDegrees = (Math.toDegrees(atan2((a.y - h.y).toDouble(), (a.x - h.x).toDouble()))).toFloat()
+        canvas.rotate(rotateDegrees, h.x, h.y)
+        gradientDrawable.draw(canvas)
     }
 
     /**
@@ -407,6 +515,18 @@ class BookPageView @JvmOverloads constructor(
         //jk的中点与h的中点
         i.x = ((j.x + k.x) / 2 + h.x) / 2
         i.y = ((j.y + k.y) / 2 + h.y) / 2
+
+        //计算d点到直线ae的距离
+        val lA: Float = a.y - e.y
+        val lB: Float = e.x - a.x
+        val lC: Float = a.x * e.y - e.x * a.y
+        lPathAShadowDis = abs((lA * d.x + lB * d.y + lC) / hypot(lA, lB))
+
+        //计算i点到ah的距离
+        val rA: Float = a.y - h.y
+        val rB: Float = h.x - a.x
+        val rC: Float = a.x * h.y - h.x * a.y
+        rPathAShadowDis = abs((rA * i.x + rB * i.y + rC) / hypot(rA, rB))
     }
 
     private fun calcPointCX(tempA: PointF, tempF: PointF): Float {
