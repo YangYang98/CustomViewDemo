@@ -14,9 +14,11 @@ import android.graphics.Region
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Scroller
+import android.widget.Toast
 import com.yang.customviewdemo.R
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -757,5 +759,41 @@ class BookPageView @JvmOverloads constructor(
         }
 
         scroller.startScroll(a.x.toInt(), a.y.toInt(), dx, dy, 200)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        super.onTouchEvent(event)
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                val touchX = event.x
+                val touchY = event.y
+
+                if (touchX <= this.viewWidth / 3) { // 左
+                    style = STYLE_LEFT
+                    setTouchPoint(touchX, touchY, style)
+                } else if (touchX > this.viewWidth / 3 && touchY <= this.viewHeight / 3) { //上
+                    style = STYLE_TOP_RIGHT
+                    setTouchPoint(touchX, touchY, style)
+                } else if (touchX > this.viewWidth * 2 / 3 && touchY > this.viewHeight / 3 && touchY <= this.viewHeight * 2 / 3) { //右
+                    style = STYLE_RIGHT
+                    setTouchPoint(touchX, touchY, style)
+                } else if (touchX > this.viewWidth / 3 && touchY > this.viewHeight * 2 / 3) {
+                    style = STYLE_BOTTOM_RIGHT
+                    setTouchPoint(touchX, touchY, style)
+                } else if (touchX > this.viewWidth / 3 && touchX < this.viewWidth * 2 / 3 && touchY > this.viewHeight / 3 && touchY < this.viewHeight * 2 / 3) {
+                    style = STYLE_MIDDLE
+                    Toast.makeText(context,"点击了中部", Toast.LENGTH_SHORT).show();
+                }
+            }
+            MotionEvent.ACTION_MOVE -> {
+                setTouchPoint(event.x, event.y, style)
+            }
+            MotionEvent.ACTION_UP -> {
+                startCancelAnim()
+            }
+        }
+
+        return true
     }
 }
