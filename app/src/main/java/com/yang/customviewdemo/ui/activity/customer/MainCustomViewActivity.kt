@@ -52,5 +52,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_book_page_view).setOnClickListener {
             startActivity(Intent(this, BookPageViewActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_expand_menu).setOnClickListener {
+            startActivity(Intent(this, HorizontalExpandMenuActivity::class.java))
+        }
     }
 }
