@@ -56,5 +56,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_expand_menu).setOnClickListener {
             startActivity(Intent(this, HorizontalExpandMenuActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_flip_number_view).setOnClickListener {
+            startActivity(Intent(this, FlipNumberViewActivity::class.java))
+        }
     }
 }
