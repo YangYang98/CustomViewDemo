@@ -56,5 +56,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_expand_menu).setOnClickListener {
             startActivity(Intent(this, HorizontalExpandMenuActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_time_disk).setOnClickListener {
+            startActivity(Intent(this, TimeDiskActivity::class.java))
+        }
     }
 }
