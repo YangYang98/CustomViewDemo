@@ -102,4 +102,9 @@
         android:textAllCaps="false"
         />
 
+    <com.yang.customviewdemo.ui.widget.SwitchButton
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        />
+
 </LinearLayout>
