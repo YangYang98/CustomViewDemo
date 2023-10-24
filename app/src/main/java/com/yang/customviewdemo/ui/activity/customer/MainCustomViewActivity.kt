@@ -60,5 +60,9 @@ class MainCustomViewActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_time_disk).setOnClickListener {
             startActivity(Intent(this, TimeDiskActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_level_select).setOnClickListener {
+            startActivity(Intent(this, LevelSelectViewActivity::class.java))
+        }
     }
 }
