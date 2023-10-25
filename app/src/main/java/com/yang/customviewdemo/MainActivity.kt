@@ -10,6 +10,7 @@ import com.yang.customviewdemo.ui.activity.customer.drawable.MainCustomDrawableA
 import com.yang.customviewdemo.ui.activity.layoutInflate.TestLayoutInflateActivity
 import com.yang.customviewdemo.ui.activity.test.TestJsonRecyclerViewActivity
 import com.yang.customviewdemo.ui.activity.viewpager.MainViewPagerActivity
+import com.yang.customviewdemo.ui.animation.MainAnimationActivity
 import com.yang.customviewdemo.ui.coordinatorLayout.CustomerBehaviorActivity
 
 class MainActivity : AppCompatActivity() {
@@ -59,6 +60,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_view_pager).setOnClickListener {
             startActivity(Intent(this, MainViewPagerActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_animation).setOnClickListener {
+            startActivity(Intent(this, MainAnimationActivity::class.java))
         }
     }
 }
