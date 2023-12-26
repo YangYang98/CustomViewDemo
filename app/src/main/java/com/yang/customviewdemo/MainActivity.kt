@@ -8,6 +8,7 @@ import com.yang.customviewdemo.ui.activity.AntFundActivity
 import com.yang.customviewdemo.ui.activity.customer.MainCustomViewActivity
 import com.yang.customviewdemo.ui.activity.customer.drawable.MainCustomDrawableActivity
 import com.yang.customviewdemo.ui.activity.layoutInflate.TestLayoutInflateActivity
+import com.yang.customviewdemo.ui.activity.memory.MemoryManagerActivity
 import com.yang.customviewdemo.ui.activity.test.TestJsonRecyclerViewActivity
 import com.yang.customviewdemo.ui.activity.viewpager.MainViewPagerActivity
 import com.yang.customviewdemo.ui.animation.MainAnimationActivity
@@ -64,6 +65,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_animation).setOnClickListener {
             startActivity(Intent(this, MainAnimationActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_memory_manager).setOnClickListener {
+            startActivity(Intent(this, MemoryManagerActivity::class.java))
         }
     }
 }
